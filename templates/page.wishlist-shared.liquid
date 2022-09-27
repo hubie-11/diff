@@ -1,0 +1,18 @@
+<section class="section-account default--holder fade-in js-fade-in">
+	<div class="shell">
+		<div class="section__inner">
+			{%- include 'account', fragment: 'sidebar' -%}
+
+			<div class="section__content">
+				{%- include 'account', fragment: 'head' -%}
+        <div class="section__body">
+          {%- assign grid_class = 'grid--layout-' | append: settings.app_wk_products_per_row -%}
+
+        	<!-- include 'wishlist-collection' -->
+
+					<div class="grid {{ grid_class }} js-wishlist-items-holder"></div>
+        </div><!-- /.section__body -->
+			</div><!-- /.section__content -->
+		</div><!-- /.section__inner -->
+	</div><!-- /.shell -->
+</section><!-- /.section-account -->

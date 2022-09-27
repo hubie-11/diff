@@ -1,0 +1,15 @@
+{%- layout none -%}
+
+{%- capture is_mobile_grid -%}
+  {%- render 'get-parameter', get_parameter: 'mobile_grid' -%}
+{%- endcapture -%}
+
+{%- assign additional_product_item_classes = '' -%}
+{%- assign is_half_on_mobile = false -%}
+
+{%- if is_mobile_grid != '' -%}
+  {%- assign additional_product_item_classes = 'product-item--half-mobile' -%}
+  {%- assign is_half_on_mobile = true -%}
+{%- endif -%}
+
+{%- include 'product-item', current_product: product, show_video: true, additional_classes: additional_product_item_classes, is_half_on_mobile: is_half_on_mobile -%}

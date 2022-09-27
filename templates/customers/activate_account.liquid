@@ -1,0 +1,52 @@
+<div class="shell">
+	<div class="form form--default form--account form--activate form--small">
+		{%- form 'activate_customer_password' -%}
+			{%- assign error_class = 'form__row--error' | prepend: ' ' -%}
+			{%- capture error_password -%}{%- if form.errors contains 'form' -%}{{- error_class -}}{%- endif -%}{%- endcapture -%}
+
+			<div class="form__head">
+				<h1 class="form__title">
+					{{- 'customer.activate_account.title' | t -}}
+				</h1><!-- /.form__title -->
+
+				<p class="form__description">
+					{{- 'customer.activate_account.subtext' | t -}}
+				</p><!-- /.form__description -->
+			</div><!-- /.form__head -->
+
+			{%- if form.errors -%}
+				<div class="form__errors">
+					{{- form.errors | default_errors -}}
+				</div><!-- /.form__errors -->
+			{%- endif -%}
+
+			<div class="form__body">
+				<div class="form__row{{ error_password }}">
+					<label for="field-customer-password" class="form__label">{{- 'customer.activate_account.password' | t -}}</label>
+
+					<div class="form__controls">
+						<input type="password" class="field" name="customer[password]" id="field-customer-password" value="" placeholder="{{- 'customer.activate_account.password' | t -}}" >
+					</div><!-- /.form__controls -->
+				</div><!-- /.form__row -->
+
+				<div class="form__row{{- error_password -}}">
+					<label for="field-customer-password-confirm" class="form__label">{{- 'customer.activate_account.password_confirm' | t -}}</label>
+
+					<div class="form__controls">
+						<input type="password" class="field" name="customer[password_confirmation]" id="field-customer-password-confirm" value="" placeholder="{{- 'customer.activate_account.password_confirm' | t -}}" >
+					</div><!-- /.form__controls -->
+				</div><!-- /.form__row -->
+			</div><!-- /.form__body -->
+
+			<div class="form__actions">
+				<button type="submit" class="form__btn btn">
+					{{- 'customer.activate_account.submit' | t -}}
+				</button>
+
+				<button type="submit" name="decline" class="form__btn btn form__btn--cancel btn--cancel">
+					{{- 'customer.activate_account.cancel' | t -}}
+				</button>
+			</div><!-- /.form__actions -->
+		{%- endform -%}
+	</div><!-- /.form -->
+</div><!-- /.shell -->

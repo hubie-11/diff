@@ -1,0 +1,63 @@
+{% if article.metafields.article.hero_image %}
+<div class="cover-image">
+	{% if article.metafields.article.hero_title %}
+	<H1>{{ article.metafields.article.hero_title }}</H1>
+	{% endif %}
+	{% if article.metafields.article.hero_subtitle %}
+	<h2>{{ article.metafields.article.hero_subtitle }}</h2>
+	{% endif %}
+</div>
+{% elsif article.metafields.article.hero_video %}
+	{%- assign video_url = article.metafields.article.hero_video[0].src | default: '' -%}
+	<div class="cover-video">
+		<video autoplay muted loop id="hero-video">
+			<source src="{{- video_url -}}" type="video/mp4">
+		</video>
+		<div class="cover-video-content">
+			{% if article.metafields.article.hero_title %}
+				<H1>{{ article.metafields.article.hero_title }}</H1>
+			{% endif %}
+			{% if article.metafields.article.hero_subtitle %}
+				<h2>{{ article.metafields.article.hero_subtitle }}</h2>
+			{% endif %}
+		</div>
+	</div>
+{% endif %}
+<div class="shell" data-cover="{% if article.metafields.article.hero_image %}image{% elsif article.metafields.article.hero_video %}video{% endif %}">
+	<div class="article--default">
+		<div class="article__listing">
+			<article class="article">
+				<header class="article__head">
+					<h2 class="article__title">
+						{{- article.title -}}
+					</h2>
+				</header><!-- /.article__head -->
+
+				<div class="article__body">
+					{{- article.content -}}
+				</div><!-- /.article__body -->
+			</article><!-- /.article -->
+
+			{% if blog.comments_enabled? %}
+				{%- include 'article-comments' -%}
+			{% endif %}
+		</div><!-- /.article__listing -->
+	</div>
+</div><!-- /.shell -->
+{% if article.metafields.article.related_product %}
+{% include 'article-featured-product' product:all_products[article.metafields.article.related_product] %}
+{% endif %}
+<style>
+	{% if article.metafields.article.hero_image %}
+	.cover-image {
+		background-image: url({{ article.metafields.article.hero_image[0].src }});
+	}
+	{% endif %}
+	{% if article.metafields.article.hero_image_mobile %}
+	@media (max-width: 768px) {
+		.cover-image {
+			background-image: url({{ article.metafields.article.hero_image_mobile[0].src }});
+		}
+	}
+	{% endif %}
+</style>

@@ -1,0 +1,93 @@
+<section class="section-access fade-in js-fade-in">
+	<div class="shell">
+		<div class="form form--default form--account form--register form--small">
+			{% form 'create_customer' %}
+				<input type="hidden" name="customer[tags]" value="" />
+
+				{%- assign error_class = 'form__row--error' | prepend: ' ' -%}
+				{%- capture error_first_name -%}{%- if form.errors contains 'first_name' -%}{{- error_class -}}{%- endif -%}{%- endcapture -%}
+				{%- capture error_last_name -%}{%- if form.errors contains 'last_name' -%}{{- error_class -}}{%- endif -%}{%- endcapture -%}
+				{%- capture error_email -%}{%- if form.errors contains 'email' -%}{{- error_class -}}{%- endif -%}{%- endcapture -%}
+				{%- capture error_password -%}{%- if form.errors contains 'password' -%}{{- error_class -}}{%- endif -%}{%- endcapture -%}
+
+				<div class="form__head">
+					<h1 class="form__title">
+						{{- 'customer.register.title' | t -}}
+					</h1><!-- /.form__title -->
+
+					<p class="form__description">
+						{{- 'customer.register.entry' | t -}}
+					</p><!-- /.form__description -->
+				</div><!-- /.form__head -->
+
+				{% if form.errors %}
+					<div class="form__errors">
+						{{- form.errors | default_errors -}}
+					</div><!-- /.form__errors -->
+				{% endif %}
+
+				<div class="form__body">
+					<div class="form__row{{- error_first_name -}}">
+						<div class="form__controls">
+							<input type="text" class="field" name="customer[first_name]" id="field-first-name" value="{{- form.first_name -}}" placeholder="{{- 'customer.register.first_name' | t -}}" required>
+							
+							<label for="field-first-name" class="form__label">{{- 'customer.register.first_name' | t -}}</label>
+						</div><!-- /.form__controls -->
+					</div><!-- /.form__row -->
+
+					<div class="form__row{{- error_last_name -}}">
+						<div class="form__controls">
+							<input type="text" class="field" name="customer[last_name]" id="field-last-name" value="{{- form.last_name -}}" placeholder="{{- 'customer.register.last_name' | t -}}" required>
+	
+							<label for="field-last-name" class="form__label">{{- 'customer.register.last_name' | t -}}</label>
+						</div><!-- /.form__controls -->
+					</div><!-- /.form__row -->
+
+					<div class="form__row{{- error_email -}}">
+						<div class="form__controls">
+							<input type="email" class="field" name="customer[email]" id="field-email" value="{{- form.email -}}" placeholder="{{- 'customer.register.email' | t -}}" required>
+	
+							<label for="field-email" class="form__label">{{- 'customer.register.email' | t -}}</label>
+						</div><!-- /.form__controls -->
+					</div><!-- /.form__row -->
+
+					<div class="form__row">
+						<div class="form__controls">
+							<input type="text" class="field js-field-birthday" id="field-tags" value="" placeholder="{{- 'customer.register.birthday' | t -}}" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" required>
+	
+							<label for="field-tags" class="form__label">{{- 'customer.register.birthday' | t -}}</label>
+						</div><!-- /.form__controls -->
+					</div><!-- /.form__row -->
+
+					<div class="form__row{{- error_password -}}">
+						<div class="form__controls">
+							<input type="password" class="field" name="customer[password]" id="field-password" value="" placeholder="{{- 'customer.register.password' | t -}}" required>
+	
+							<label for="field-password" class="form__label">{{- 'customer.register.password' | t -}}</label>
+						</div><!-- /.form__controls -->
+					</div><!-- /.form__row -->
+
+					<div class="form__row">
+		        <div class="checkbox">
+		          <input type="checkbox" name="customer[accepts_marketing]" checked="checked" id="customer-accepts-marketing" />
+
+		          <label for="customer-accepts-marketing">
+		            {{- 'customer.register.accepts_marketing' | t -}}
+		          </label>
+		        </div><!-- /.checkbox -->
+		      </div><!-- /.form__row -->
+				</div><!-- /.form__body -->
+
+				<div class="form__actions">
+					<button type="submit" class="form__btn btn btn--block">
+						{{- 'customer.register.submit' | t -}}
+					</button>
+				</div><!-- /.form__actions -->
+
+				<div class="form__cta form__cta--center">
+					{{- 'customer.register.login_html' | t -}}
+				</div><!-- /.form__cta -->
+			{% endform %}
+		</div><!-- /.form -->
+	</div><!-- /.shell -->
+</section><!-- /.section-access -->

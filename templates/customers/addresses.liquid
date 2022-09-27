@@ -1,0 +1,108 @@
+<section class="section-account default--holder">
+	<div class="shell">
+		<div class="section__inner">
+			{%- include 'account', fragment: 'sidebar' -%}
+
+			<div class="section__content">
+				{%- include 'account', fragment: 'head' -%}
+
+				<div class="addresses__actions">
+					{%- if customer.addresses.size == 0 -%}
+						<p class="addresses__empty">
+							{{ 'customer.addresses.empty' | t }}
+						</p>
+					{%- endif -%}
+
+					<a href="#form--address-new" class="btn btn--new">
+						{{- 'customer.addresses.add_new' | t -}}
+					</a>
+				</div><!-- /.addresses__actions -->
+				
+				<div class="addresses">
+					{%- paginate customer.addresses by 6 -%}
+						{%- for address in customer.addresses -%}
+							{%- assign address_first_name = address.first_name -%}
+							{%- assign address_last_name = address.last_name -%}
+
+							<div class="form form--address form--default" id="edit_address_{{address.id}}" style="display: none;">
+								{%- form 'customer_address', address -%}
+									{%- if form.errors -%}
+										<div class="form__errors">
+											{{- form.errors | default_errors -}}
+										</div><!-- /.form__errors -->
+									{%- endif -%}
+
+									<div class="form__body">
+										{%- include 'form-address-body', index: form.id -%}
+									</div><!-- /.form__body -->
+
+									<div class="form__actions">
+										<a href="#" class="form__btn form__btn--inverse btn btn--cancel" onclick="Shopify.CustomerAddress.toggleForm({{address.id}});return false">
+											{{- 'customer.addresses.cancel' | t -}}
+										</a>
+
+										<button type="submit" class="form__btn btn">
+											{{- 'customer.addresses.update' | t -}}
+										</button>
+									</div><!-- /.form__actions -->
+								{%- endform -%}
+							</div><!-- /.form -->
+
+							<span class="form form--default form--address-overlay"></span>
+
+							<div class="address {% if address.id == customer.default_address.id %}address--default{% endif %}" id="view_address_{{ address.id }}">
+								<h4 class="address__title">
+									{{ address_first_name }} {{ address_last_name }}
+
+									{%- if address.id == customer.default_address.id -%}
+										<span>
+											{{ 'customer.addresses.default' | t }}
+										</span>
+									{%- endif -%}
+								</h4><!-- /.address__title -->
+
+								<div class="address__details">
+									{{- address | format_address -}}
+								</div><!-- /.address__details -->
+								<div class="address__actions">
+									{{- 'customer.addresses.edit' | t | edit_customer_address_link: address.id -}}
+
+									{{- 'customer.addresses.delete' | t | delete_customer_address_link: address.id -}}
+								</div><!-- /.address__actions -->
+							</div><!-- /.address -->
+						{%- endfor -%}
+
+						{%- include 'pagination', pager: true -%}
+					{% endpaginate %}
+				</div><!-- /.addresses -->
+
+				<div class="form form--address form--address-new form--default" style="display: none;">
+					{%- form 'customer_address', customer.new_address -%}
+						{%- if form.errors -%}
+							<div class="form__errors">
+								{{ form.errors | default_errors }}
+							</div><!-- /.form__errors -->
+						{%- endif -%}
+
+						<div class="form__body">
+							{%- include 'form-address-body', index: 'new' -%}
+						</div><!-- /.form__body -->
+
+						<div class="form__actions">
+							<a href="#form--address-new" class="form__btn form__btn--inverse btn btn--cancel">
+								{{- 'customer.addresses.cancel' | t -}}
+							</a>
+
+							<button type="submit" class="form__btn btn">
+								{{- 'customer.addresses.add' | t -}}
+							</button>
+						</div><!-- /.form__actions -->
+					{%- endform -%}
+				</div><!-- /.form -->
+
+				<span class="form form--default form--address-overlay"></span>
+			</div><!-- /.section__content -->
+		</div><!-- /.section__inner -->
+	</div><!-- /.shell -->
+</section><!-- /.section-account -->
+
