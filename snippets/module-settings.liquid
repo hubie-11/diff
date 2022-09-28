@@ -1,8 +1,0 @@
-{%- capture trw_scripts -%}
-<script>
-    Shopify.trw = Shopify.trw || {};
-    Shopify.trw.template = "{{- template -}}",
-    Shopify.trw.module = Shopify.trw.module || {};
-    Shopify.trw.module['trwhelper'] = "{{- 'trw.helper.js' | asset_url -}}";
-</script>
-{%- endcapture -%}
