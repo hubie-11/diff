@@ -95,6 +95,10 @@
     <div class="slider__slides js-product-slider" data-has-thumbs="{{- has_thumbs -}}" data-has-dots-on-mobile="{% if template contains 'product' %}true{%- else -%}false{% endif %}">
       {{- slider_slides_html -}}
     </div><!-- /.slider__slides -->
+
+    {%- if _section.show_promotional_labels -%}
+      {%- include 'badges', _product: _product -%}
+    {%- endif -%}
   </div><!-- /.slider__clip -->
 
   {%- if layout == 'slider_no_thumbs' -%}
@@ -109,9 +113,5 @@
 
       <div class="slider__nav js-product-slider-nav"></div><!-- /.slider__nav -->
     </div><!-- /.slider__thumbs -->
-  {%- endif -%}
-
-  {%- if has_counters -%}
-    <div class="slider__counter js-slider-counter visible-xs-block"></div><!-- /.slider__counter -->
   {%- endif -%}
 </div><!-- /.slider-product -->

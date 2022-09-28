@@ -9,17 +9,20 @@
         </div>
         {{ settings.embroidery_tooltip }}
     </div>
- 
-    <button
+    
+    <div class="inner">
+        <button
             class="c-embroidery-main-cta"
             type="button"
             aria-label="Show embroidery modal"
             data-js-embroidery-hat-toggle
             data-js-embroidery-hat-main-cta
-    >
-        <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.Embroidery.button_text_color }}; background-color: {{ product.metafields.Embroidery.button_background }};">{{ product.metafields.embroidery.button_title | default: "CUSTOM EMBROIDERY" }}</span>
-    </button>
-    <a href="#embroidery_hat_see_details" class="see_details" data-js-embroidery-hat-tooltip-toggle>SEE DETAILS</a>
+        >
+            <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.Embroidery.button_text_color }}; background-color: {{ product.metafields.Embroidery.button_background }};">{{ product.metafields.embroidery.button_title | default: "CUSTOM EMBROIDERY" }}</span>
+        </button>
+
+        <a href="#embroidery_hat_see_details" class="see_details" data-js-embroidery-hat-tooltip-toggle>SEE DETAILS</a>
+    </div><!-- /.inner -->
 {% elsif product.metafields.embroidery_hat_left.enabled and product.metafields.embroidery_hat_right.enabled %}
     <div class="js-embroidery-error hidden">
         {{- settings.embroidery_hat_left_error -}}
@@ -31,17 +34,19 @@
         </div>
         {{ settings.embroidery_hat_left_tooltip }}
     </div>
- 
-    <button
+
+    <div class="inner">
+        <button
             class="c-embroidery-main-cta"
             type="button"
             aria-label="Show embroidery modal"
             data-js-embroidery-hat-toggle
             data-js-embroidery-hat-main-cta
-    >
-        <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.embroidery_hat_left.button_text_color }}; background-color: {{ product.metafields.embroidery_hat_left.button_background }};">{{ product.metafields.embroidery_hat_left.button_title | default: "CUSTOM EMBROIDERY" }}</span>
-    </button>
-    <a href="#embroidery_hat_see_details" class="see_details" data-js-embroidery-hat-tooltip-toggle>SEE DETAILS</a>
+        >
+            <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.embroidery_hat_left.button_text_color }}; background-color: {{ product.metafields.embroidery_hat_left.button_background }};">{{ product.metafields.embroidery_hat_left.button_title | default: "CUSTOM EMBROIDERY" }}</span>
+        </button>
+        <a href="#embroidery_hat_see_details" class="see_details" data-js-embroidery-hat-tooltip-toggle>SEE DETAILS</a>
+    </div><!-- /.inner -->
 {% endif %}
 
 {% if product.metafields.Embroidery.enabled %}

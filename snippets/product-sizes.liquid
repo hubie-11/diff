@@ -45,7 +45,7 @@
 
     {%- if is_pdp -%}
       {%- unless hide_variant -%}
-        <li {{ forloop.index }} {% if forloop.index > 5 %}class="low-stock-bottom"{% endif %}>
+        <li {{ forloop.index }}>
          <input
             class="js-product-option js-product-option-size{% if has_quick_add %} js-product-option-quick-add{% endif %}{% if allow_disabled %} js-allow-disabled{% endif %}"
             data-option-position="{{- product_option.position -}}"

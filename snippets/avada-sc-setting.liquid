@@ -20,7 +20,7 @@
   {% assign content_for_header = content_for_header | remove: avada_size_chart_scripttag %}
 {% endif %}
 <script>
-  const AVADA_SC = {};
+  var AVADA_SC = {};
   AVADA_SC.product = {{product|json}};
   AVADA_SC.template = "{{ template }}";
   AVADA_SC.collections = [];

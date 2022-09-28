@@ -2325,7 +2325,7 @@ textarea:focus + .form__label {
         -webkit-box-pack: justify;
             -ms-flex-pack: justify;
                 justify-content: space-between;
-        padding: 30px 0; } }
+        padding: 30px 0 7px; } }
 .header .header__logo,
   .header .header__utils {
     width: 120px;
@@ -3029,7 +3029,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   /* Mobile */ }
-@media (max-width: 767px) {  
+@media (max-width: 767px) {
   .btn-play {
     font-size: 25px;
   }
@@ -3367,7 +3367,7 @@ body {
 
 .container-product-zoom .zoom-text {
   text-transform: none;
-}   
+}
 @media (min-width: 767px) {
   .container-product-zoom .zoom-text {
     display: none;
@@ -3745,15 +3745,13 @@ body {
           flex: 0 0 100%;
   max-width: 100%; }
 .form-product .form__swatches {
-  -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-          order: 1; }
+  -webkit-box-ordinal-group: 2;}
 .form-product .form__sizes {
   -webkit-box-ordinal-group: 3;
       -ms-flex-order: 2;
           order: 2; }
 .form-product .form__row p {
-  margin-bottom: 19px; }
+  margin-bottom: 0; }
 .form-product .form__row {
   margin-bottom: 30px; }
 .form-product .form__row label,
@@ -6160,7 +6158,7 @@ body {
   /* Mobile */ }
 @media (max-width: 767px) {
     .section-product {
-      padding-top: 20px; } }
+      padding-top: 0; } }
 .section-product .section__cols:after {
     content: '';
     display: block;
@@ -6236,7 +6234,7 @@ body {
     padding-top: 3px;
     padding-bottom: 41px;
     border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 36px; }
+    margin-bottom: 26px; }
 .section-product h1 {
     margin-bottom: 18px;
     /* Tablet Portrait */
@@ -6671,7 +6669,10 @@ body {
   list-style-type: none;
   font-size: 0;
   padding: 0;
-  margin: 0; }
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
 .slick-dots li {
     background-color: transparent;
     display: inline-block;
@@ -7145,8 +7146,11 @@ body {
 .slider-product--alt {
   /* Mobile */ }
 @media (max-width: 767px) {
-    .slider-product--alt {
-      position: relative; } }
+  .slider-product--alt {
+    position: relative;
+    margin: 0 -20px;
+  }
+}
 .slider-product--alt .slider__thumbs {
     /* Mobile */ }
 @media (max-width: 767px) {

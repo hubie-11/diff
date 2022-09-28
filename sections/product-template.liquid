@@ -113,7 +113,7 @@
           {%- endif -%}
         {%- endfor -%}
       {%- endunless -%}
-      <button class="btn js-product-add-trigger {% if settings.klaviyo_api_key != blank and no_back_in_stock == false and _product.available == false %} form__btn-bis-trigger{% endif %}{% if settings.klaviyo_api_key != blank and no_back_in_stock == true and _product.available == true and pre_order == true %} form__btn-bis-trigger{% endif %}"">{{- 'products.product.add_to_cart' |  t -}}</button>
+      <button class="btn js-product-add-trigger {% if settings.klaviyo_api_key != blank and no_back_in_stock == false and _product.available == false %} form__btn-bis-trigger{% endif %}{% if settings.klaviyo_api_key != blank and no_back_in_stock == true and _product.available == true and pre_order == true %} form__btn-bis-trigger{% endif %}">{{- 'products.product.add_to_cart' |  t -}}</button>
       {%- if settings.klaviyo_api_key != blank and no_back_in_stock == false and _product.available == false -%}
       <a class="btn btn--block form__btn form__btn-bis js-click" href="#popup-back-in-stock">
         {{- 'products.product.back_in_stock.back_in_stock_button_text' | t -}}
@@ -153,11 +153,17 @@
     <div class="section__col{% if media_slider_layout != 'grid_small' and media_slider_layout != 'grid_large' %} js-stick-in-parent{% endif %}">
       <div class="section__content">
         <header class="section__head">
-          <h1 class="main-prod-title h2" itemprop="name">{{- product.title -}}</h1>
+          <div class="section__inner">
+            <h1 class="main-prod-title h2" itemprop="name">{{- product.title -}}</h1>
 
-          {%- if _section.show_promotional_labels -%}
+            <span class="section__price price price--large js-product-price">
+              {%- include 'price' with _product -%}
+            </span>
+          </div><!-- /.section__inner -->
+
+          {% comment %}{%- if _section.show_promotional_labels -%}
             {%- include 'badges', _product: product -%}
-          {%- endif -%}
+          {%- endif -%}{% endcomment %}
 
           <div class="section__meta">
             {%- if product.vendor != empty and _section.show_vendor -%}
@@ -165,10 +171,6 @@
             {%- endif -%}
 
             <div class="section__info">
-              <span class="price price--large js-product-price">
-                {%- include 'price' with _product -%}
-              </span>
-
               <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
             </div><!-- /.section__info -->
           </div><!-- /.section__meta -->
@@ -220,7 +222,12 @@
                     {%- endfor -%}
 
                     <div class="form__row form__swatches">
-                      <p>{{ 'products.product.color_option_label' | t }}: <strong class="js-color-selected">{{- _product.options[color_option_index] -}}</strong></p>
+                      <p class="form__swatches-color form__swatches-color--here">
+                        <span class="hidden-xs">{{ 'products.product.color_option_label' | t }}:</span>
+                        
+                        <strong class="js-color-selected">{{- _product.options[color_option_index] -}}</strong>
+                      </p>
+
                       {%- if group_products_tag != '' -%}
                         <ul
                           class="swatches js-group-products-swatches hidden"
@@ -231,10 +238,41 @@
                         {%- include 'swatches' -%}
                       {%- endif -%}
                     </div><!-- /.form__row form__swatches -->
+
+                    <div class="form__quantity">
+                      <label for="quantity-{{- product.id -}}" class="{% unless _section.show_quantity %} hidden{% endunless %}">{{- 'products.product.quantity' | t -}}</label>
+
+                      <div class="quantity form__quantity{% unless _section.show_quantity %} hidden{% endunless %}">
+                        <a
+                          href="#quantity-{{- product.id -}}"
+                          class="js-quantity js-quantity-decrease{% unless _product.available %} is-disabled{% endunless %}"
+                        >
+                          {%- include 'icons', icon: 'minus' -%}
+                        </a>
+
+                        <input
+                          type="number"
+                          name="updates[]"
+                          class="js-product-quantity{% unless _product.available %} is-disabled{% endunless %}"
+                          id="quantity-{{- product.id -}}"
+                          value="1"
+                          min="1"
+                          max="{{- _product.inventory_quantity -}}"
+                        >
+
+                        <a
+                          href="#quantity-{{- product.id -}}"
+                          class="js-quantity js-quantity-increase{% unless _product.available %} is-disabled{% endunless %}"
+                        >
+                          {%- include 'icons', icon: 'plus' -%}
+                        </a>
+                      </div><!-- /.quantity -->
+                    </div><!-- /.form__quantity -->
+
                   {%- elsif option_name_handle == 'size' -%}
                     {%- assign size_option_index = product_option.position | minus: 1 -%}
 
-                    <div class="form__row form__sizes">
+                    <div class="form__row form__sizes js-product-sizes">
                       <p>
                         {{ 'products.product.size_option_label' | t }}:
 
@@ -271,36 +309,6 @@
             {% endif %}
 
             <div class="form__actions">
-              <div class="form__quantity">
-                <label for="quantity-{{- product.id -}}" class="{% unless _section.show_quantity %} hidden{% endunless %}">{{- 'products.product.quantity' | t -}}</label>
-
-                <div class="quantity form__quantity{% unless _section.show_quantity %} hidden{% endunless %}">
-                  <a
-                    href="#quantity-{{- product.id -}}"
-                    class="js-quantity js-quantity-decrease{% unless _product.available %} is-disabled{% endunless %}"
-                  >
-                    {%- include 'icons', icon: 'minus' -%}
-                  </a>
-
-                  <input
-                    type="number"
-                    name="updates[]"
-                    class="js-product-quantity{% unless _product.available %} is-disabled{% endunless %}"
-                    id="quantity-{{- product.id -}}"
-                    value="1"
-                    min="1"
-                    max="{{- _product.inventory_quantity -}}"
-                  >
-
-                  <a
-                    href="#quantity-{{- product.id -}}"
-                    class="js-quantity js-quantity-increase{% unless _product.available %} is-disabled{% endunless %}"
-                  >
-                    {%- include 'icons', icon: 'plus' -%}
-                  </a>
-                </div><!-- /.quantity -->
-              </div><!-- /.form__quantity -->
-
               <div class="form__buttons" data-real-avl="{{ _product.available }}" data-default="{{- 'products.product.add_to_cart' | t -}}">
                 <div class="form__payment-placements"></div><!-- /.form__payment-placements -->
 
@@ -310,7 +318,7 @@
                     Notify Me When Released
                   </a>
                 {% else %}
-                <span class="form__button__container{% if product.variants.size == 1 %} single{% endif %}{% if product.available %} has-hover-state{% endif %}" data-message="{{ data_message }}">
+                <span class="form__button__container js-product-button-scroll{% if product.variants.size == 1 %} single{% endif %}{% if product.available %} has-hover-state{% endif %}" data-message="{{ data_message }}">
                   <button
                      type="submit"
                      name="add"
