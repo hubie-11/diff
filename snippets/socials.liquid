@@ -1,0 +1,28 @@
+{%- capture socials_list -%}
+social_facebook_link|Facebook,
+social_twitter_link|Twitter,
+social_instagram_link|Instagram,
+social_pinterest_link|Pinterest,
+social_tumblr_link|Tumblr,
+social_snapchat_link|Snapchat,
+social_youtube_link|Youtube,
+social_vimeo_link|Vimeo
+{%- endcapture -%}
+{%- assign socials_list = socials_list | strip_newlines | split: ',' -%}
+
+<ul class="{{ class }}">
+  {%- for social_link in socials_list -%}
+    {%- assign social_link_array = social_link | split: '|' -%}
+
+    {% if settings[social_link_array.first] != blank %}
+      {%- assign link_name_handle = social_link_array.last | handle -%}
+      <li>
+        <a href="{{ settings[social_link_array.first] | escape }}" title="{{ 'layout.socials.social_platform' | t: name: shop.name, platform: social_link_array.last }}" target="_blank">
+          {%- include 'icons', icon: link_name_handle -%}
+
+          {{- social_link_array.last -}}
+        </a>
+      </li>
+    {% endif %}
+  {%- endfor -%}
+</ul>

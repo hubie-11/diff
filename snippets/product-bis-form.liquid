@@ -1,0 +1,80 @@
+{%- assign popup_id = 'popup-back-in-stock' -%}
+
+{%- if is_plp -%}
+  {%- assign popup_id = popup_id | append: '-' | append: product.id -%}
+{%- endif -%}
+
+<div class="popup-back-in-stock" id="{{popup_id}}">
+  <a href="#{{popup_id}}" class="popup__close js-click">
+    {%- include 'icons', icon: 'close' -%}
+  </a>
+
+  <form action="https://a.klaviyo.com/onsite/components/back-in-stock/subscribe" method="post" class="form form--default js-back-in-stock-form">
+    <header class="popup__head">
+      <h4>{{- product.title -}}</h4>
+
+      <p>{{- 'products.product.back_in_stock.back_in_stock_subtext' | t -}}</p>
+
+      <p class="js-popup-success-text" style="display: none;">{{- 'products.product.back_in_stock.back_in_stock_success_text' | t -}}</p>
+    </header><!-- /.popup__head -->
+
+    <div class="popup__body">
+      <input type="hidden" name="a" value="{{- settings.klaviyo_api_key -}}">
+
+      <input type="hidden" name="product" value="{{- product.id -}}">
+
+      <input type="hidden" name="platform" value="shopify">
+
+      {%- if settings.klaviyo_list_id != blank -%}
+        <input type="hidden" name="g" value="{{- settings.klaviyo_list_id -}}">
+      {%- else -%}
+        <input type="hidden" name="g" value="">
+
+        <input type="hidden" name="subscribe_for_newsletter" value="false">
+      {%- endif -%}
+
+      {%- unless product.has_only_default_variant -%}
+        <div class="popup__row popup__select select">
+          <select name="variant" class="popup__controls js-back-in-stock-variants-selector">
+            {%- for variant in product.variants -%}
+              {%- unless variant.available -%}
+                <option
+                  value="{{- variant.id -}}"
+
+                  {% if _product.id == variant.id %}
+                    selected
+                  {% endif %}
+
+                  {%- for option in variant.options -%}
+                    data-option{{- forloop.index -}}="{{- option | handle -}}"
+                  {%- endfor -%}
+
+                >{{- variant.title -}}</option>
+              {%- endunless -%}
+            {%- endfor -%}
+          </select>
+        </div><!-- /.popup__row -->
+      {%- else -%}
+        <input type="hidden" name="variant" value="{{- product.selected_or_first_available_variant.id -}}">
+      {%- endunless -%}
+
+      <div class="popup__row">
+        <input type="email" id="field-bis-email" name="email" class="popup__controls field" value="{{- customer.email -}}" placeholder="{{- 'products.product.back_in_stock.back_in_stock_email' | t -}}" data-product-id="{{- product.id -}}" required>
+
+        <label for="field-bis-email" class="form__label">{{- 'products.product.back_in_stock.back_in_stock_email' | t -}}</label>
+      </div><!-- /.popup__row -->
+
+      {%- if settings.klaviyo_list_id != blank -%}
+        <div class="popup__row">
+          <input type="checkbox" name="subscribe_for_newsletter" id="subscribe-for-newsletter" checked>
+
+          <label for="subscribe-for-newsletter">{{- 'products.product.back_in_stock.back_in_stock_consent' | t -}}</label>
+        </div><!-- /.popup__row -->
+      {%- endif -%}
+
+      <button type="submit" class="btn popup__controls">{{- 'products.product.back_in_stock.back_in_stock_submit' | t -}}</button>
+    </div>
+  </form>
+</div>
+
+<a href="#{{popup_id}}" class="popup-back-in-stock-overlay js-click"></a>

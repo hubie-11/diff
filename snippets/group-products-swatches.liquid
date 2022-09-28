@@ -1,0 +1,37 @@
+{%- for _product in collection.products -%}
+  {%- assign color_option_position = 0 -%}
+
+  {%- for option in _product.options_with_values -%}
+    {%- assign option_name_handle = option.name | handle -%}
+
+    {%- if option_name_handle == 'color' or option_name_handle == 'color' -%}
+      {%- assign color_option_position = option.position | minus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign color_value = _product.variants[0].options[color_option_position] -%}
+
+  <li>
+    <input
+      class="js-product-option-color js-product-option js-group-product-swatch{% if is_product_item %} js-group-product-prevent-fetch{% endif %}"
+      data-option-position="{{- color_option_position | plus: 1 -}}"
+      {% unless is_product_item %}
+        id="group-product-swatch-{{- _product.id -}}"
+      {% endunless %}
+      type="radio"
+      data-handle="{{- _product.handle -}}"
+      data-url="{{- _product.url -}}{{- view_template -}}"
+      value="{{- color_value | handle -}}"
+    >
+    
+    <label
+      {% unless is_product_item %}
+        for="group-product-swatch-{{- _product.id -}}"
+      {% endunless %}
+      class="{% if is_product_item %}js-group-product-item-swatch {% endif %}swatches__item swatch swatch__color-{{- color_value | handle -}}"
+      style="background-color: {{ color_value | handle }};"
+    >
+      {{- color_value -}}
+    </label>
+  </li>
+{%- endfor -%}

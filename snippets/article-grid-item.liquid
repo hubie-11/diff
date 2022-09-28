@@ -1,0 +1,13 @@
+<article class="article-item regular-item">
+	{%- if _article.image -%}
+		<div class="article-item__image-wrapper">
+			<a href="{{- _article.url -}}" class="article-item__image lazyload" data-bg="{{- _article.image | img_url: '400x'  -}}" role="img" aria-label="{{- _article.image.alt | escape -}}"></a>
+		</div><!-- /.article-item__image-wrapper -->
+	{%- endif -%}
+
+	<h5>
+		<a href="{{- _article.url -}}">{{- _article.title -}}</a>
+	</h5>
+
+	<p>{{- _article.excerpt_or_content | strip_html | truncatewords: 13 -}}</p>
+</article><!-- /.article-item -->

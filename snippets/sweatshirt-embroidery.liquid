@@ -1,0 +1,32 @@
+{% if product.metafields.embroidery_left_ches.enabled and product.metafields.embroidery_right_cuf.enabled %}
+    <div class="js-embroidery-error hidden">
+        {{- settings.embroidery_left_chest_error -}}
+    </div><!-- /.embroidery-error -->
+
+    <div class="tooltip-sweatshirt">
+        <div class="tooltip-header">
+            <a href="#embroidery_sweatshirt_see_details" class="js-close-embroidery-sweatshirt-tooltip" data-js-embroidery-sweatshirt-tooltip-toggle>×</a>
+        </div>
+        {{ settings.embroidery_left_chest_tooltip }}
+    </div>
+    <button
+            class="c-embroidery-main-cta"
+            type="button"
+            aria-label="Show embroidery modal"
+            data-js-embroidery-sweatshirt-toggle
+            data-js-embroidery-sweatshirt-main-cta
+    >
+        <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.embroidery_left_ches.button_text_color }}; background-color: {{ product.metafields.embroidery_left_ches.button_background }};">{{ product.metafields.embroidery_left_ches.button_title | default: "CUSTOM EMBROIDERY" }}</span>
+    </button>
+    <a href="#embroidery_sweatshirt_see_details" class="see_details" data-js-embroidery-sweatshirt-tooltip-toggle>SEE DETAILS</a>
+{% endif %}
+
+{% if product.metafields.embroidery_left_ches.enabled %}
+    {% include 'product-custom-embroidery-left-chest' %}
+    <br>
+{% endif %}
+
+{% if product.metafields.embroidery_right_cuf.enabled %}
+    {% include 'product-custom-embroidery-right-cuff' %}
+    <br>
+{% endif %}

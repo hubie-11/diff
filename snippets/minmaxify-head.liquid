@@ -1,0 +1,7 @@
+{% if content_for_header contains 'shopifyorderlimits.s3.amazonaws.com' %}
+{% if shop.permanent_domain == 'https-www-paperplane-shop.myshopify.com' %}
+<script src="https://shopifyorderlimits.s3.amazonaws.com/limits/https-www-paperplane-shop.myshopify.com?v=91b&r=20220718180704&shop=https-www-paperplane-shop.myshopify.com"></script>
+{% endif %}
+{% else %}
+<script type="text/javascript">console.error("MinMaxify is deactivated for this website. Please don't forget to remove minmaxify-head.liquid still being referenced by theme.liquid")</script>
+{% endif %}

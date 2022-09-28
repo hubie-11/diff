@@ -1,0 +1,64 @@
+<style type="text/css" media="screen">
+  .ie-modal { position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 99999; font-family: Arial, sans-serif; transition: opacity .3s, visibility .3s; }
+  .ie-modal.hidden { opacity: 0; visibility: hidden; }
+
+  .ie-modal p { font-size: 14px; line-height: 1.5; letter-spacing: 0; }
+
+  .ie-modal .ie-modal__bg { position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, 0.7); cursor: pointer; }
+  .ie-modal .ie-modal__inner { width: 100%; max-width: 650px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 30px; z-index: 1; }
+  .ie-modal .ie-modal__head { padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid  #ccc; position: relative; }
+  .ie-modal .ie-modal__head h2 { text-transform: uppercase; font-size: 25px; letter-spacing: 0.02em; font-family: Arial, sans-serif; margin-bottom: 0; }
+
+  .ie-modal .ie-modal__close { position: absolute; top: -15px; right: -10px; transform: scaleY(0.85); color: #666; font-weight: 700; }
+</style>
+
+<div id="ie-modal" class="ie-modal hidden">
+  <div id="ie-modal-close-bg" class="ie-modal__bg"></div><!-- /.ie-modal__bg -->
+
+  <div class="ie-modal__inner">
+    <header class="ie-modal__head">
+      <h2>Did you know that your Internet Browser is out of date?</h2>
+
+      <a href="#" id="ie-close-modal" class="ie-modal__close">X</a>
+    </header><!-- /.ie-modal__head -->
+
+    <div class="ie-modal__body">
+      <p>Your browser is out of date, and may not be compatible with our website.</p>
+
+      <p>You can update your browser from the link below.</p>
+
+      <a href="https://updatemybrowser.org/" class="btn" target="_blank">Download the latest version of your prefered browser</a>
+    </div><!-- /.ie-modal__body -->
+  </div><!-- /.ie-modal__inner -->
+</div><!-- /.ie-modal -->
+
+<script type="text/javascript">
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf("MSIE ");
+  var className = 'hidden';
+  var modal = document.getElementById("ie-modal");
+
+  function addClass(element, className){
+    element.className += ' ' + className;
+  }
+
+  function removeClass(element, className) {
+    element.className = element.className.replace(
+      new RegExp('( |^)' + className + '( |$)', 'g'), ' ').trim();
+  }
+
+  function msieversion() {
+    if (msie > 0) {
+      removeClass(modal, className);
+    }
+  }
+
+  function initCloseModal() {
+    addClass(modal, className);
+  }
+
+  msieversion();
+
+  document.getElementById("ie-close-modal").addEventListener("click", initCloseModal);
+  document.getElementById("ie-modal-close-bg").addEventListener("click", initCloseModal);
+</script>

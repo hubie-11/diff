@@ -1,0 +1,42 @@
+<div class="cart-summary">
+  <div class="cart-summary__row hidden">
+    <p>
+      <span>{{- 'cart.general.note' | t -}}</span>
+
+      <a href="#cart-summary-note" class="{% if cart.note != '' and cart.note != nil %}is-active {% endif %}js-click">
+        {{- 'cart.general.add_note' | t -}}
+
+        {%- include 'icons', icon: 'plus' -%}
+      </a>
+    </p>
+
+    <div class="cart-summary__note{% if cart.note != '' and cart.note != nil %} is-active{% endif %}" id="cart-summary-note">
+      <div class="form__controls">
+        <textarea id="cart-note" class="form__field field field--textarea" name="note" placeholder="{{- 'cart.general.add_note_placeholder' | t -}}">{{- cart.note -}}</textarea>
+
+        <label for="cart-note" class="form__label">{{- 'cart.general.add_note_placeholder' | t -}}</label>
+      </div><!-- /.form__controls -->
+    </div><!-- /.cart-summary__note -->
+  </div><!-- /.cart-summary__row -->
+
+  <div class="cart-summary__row">
+    <p>
+      <span>{{- 'cart.general.subtotal' | t -}}</span>
+
+      <span>{{- cart.items_subtotal_price | money_with_currency -}}</span>
+    </p>
+
+    <p>
+      <span>{{- 'cart.general.shipping' | t -}}</span>
+
+      <span>{{- 'cart.general.shipping_at_checkout' | t -}}</span>
+    </p>
+  </div><!-- /.cart-summary__row -->
+  <div class="cart-summary__row js-total-price" data-jstotal="{{ cart.total_price }}">
+    <p>
+      <span>{{- 'cart.general.total' | t -}}</span>
+
+      <span>{{- cart.total_price | money_with_currency -}}</span>
+    </p>
+  </div><!-- /.cart-summary__row -->
+</div><!-- /.cart-summary -->

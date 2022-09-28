@@ -1,0 +1,123 @@
+{%- assign loops_count = product.metafields.additional_products.products.size -%}
+
+{%- for i in (0..loops_count) -%}
+  {%- if product.metafields.additional_products.products[i] != nil and product.metafields.additional_products.products[i] != '' -%}
+    {%- assign handles_array = product.metafields.additional_products.products[i] | split: '|' -%}
+    {%- assign has_heading = false -%}
+
+    {%- if product.metafields.additional_products.heading[i] != nil and product.metafields.additional_products.heading[i] != '' -%}
+      {%- assign has_heading = true -%}
+    {%- endif -%}
+
+    <section class="slider-small slider-small--alt slider-small" style="padding-top: 50px; padding-bottom: 50px;">
+      <div class="shell shell--fluid">
+        <header class="slider__head">
+          {%- if has_heading -%}
+            <h4>{{- product.metafields.additional_products.heading[i] -}}</h4>
+          {%- endif -%}
+
+          <div class="slider__nav js-slider-small-nav"></div><!-- /.slider__nav -->
+        </header><!-- /.slider__head -->
+
+        <div
+          class="slider__slides js-slider-small"
+          data-destroy-mobile="false"
+          data-slides-to-show="{{- product.metafields.additional_products.products_to_show[i] | default: 4 -}}"
+          data-variable-width="false"
+        >
+          {%- for handle in handles_array -%}
+            {%- assign current_product = all_products[handle] -%}
+
+            {%- if current_product != empty -%}
+              {%- unless current_product.tags contains 'no_cross_sell' -%}
+                <div class="slider__slide">
+                  {%- include 'product-item', current_product: current_product, show_video: true, no_bis_form: true -%}
+                </div><!-- /.slider__slide -->
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div><!-- /.slider__slides js-slider-small -->
+      </div><!-- /.shell -->
+    </section><!-- /.slider-small -->
+
+    {%- for handle in handles_array -%}
+      {%- assign current_product = all_products[handle] -%}
+
+      {%- if current_product.id != blank -%}
+        {%- include 'product-bis-form', is_plp: true, product: current_product -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="slider-small slider-small--alt hidden js-product-recommendations-section" style="padding-top: 50px; padding-bottom: 50px;">
+  <div class="shell shell--fluid">
+    <header class="slider__head">
+      <h4>{{- 'products.product.see_also' | t -}}</h4>
+
+      <div class="slider__nav js-slider-small-nav"></div><!-- /.slider__nav -->
+    </header><!-- /.slider__head -->
+
+    <div
+      class="slider__slides js-slider-small js-product-recommendations-slider"
+      data-destroy-mobile="false"
+      data-slides-to-show="4"
+      data-variable-width="false"
+    ></div><!-- /.slider__slides js-slider-small -->
+  </div><!-- /.shell -->
+</section><!-- /.slider-small -->
+
+<script
+  type="text/template"
+  id="product-item-template"
+>
+  <div class="product-item js-product">
+    <div class="product__media @@mediaClass@@">
+      <a
+        href="@@url@@"
+        title="@@altText@@"
+        class="product__image @@imageClass@@"
+        style="@@imageUrl@@"
+        role="img"
+        aria-label="@@altText@@"
+      ></a>
+      @@swapImage@@
+      @@variantImages@@
+      @@badges@@
+    </div>
+
+    <div class="product__content @@contentClass@@">
+      <div class="product__meta">
+        <div class="product__meta-row @@metaClass@@">
+          <h4>
+            <a href="@@url@@" title="@@title@@">@@title@@</a>
+          </h4>
+
+          <span class="price js-product-price">@@price@@</span>
+        </div>
+
+        @@vendorHtml@@
+      </div>
+
+      <div class="product__form">
+        <form method="post" action="/cart/add" id="product_form_@@id@@" accept-charset="UTF-8" class="form-product js-product-form" enctype="multipart/form-data">
+          <input type="hidden" name="form_type" value="product">
+          <input type="hidden" name="utf8" value="✓">
+
+          <select name="id" class="hidden">@@options@@</select>
+
+          <input
+            type="hidden"
+            name="updates[]"
+            class="js-product-quantity"
+            value="1"
+          >
+
+          @@formOptions@@
+
+          <button id="probtn@@id@@" data-match-height="addButtonHeight" type="submit" name="add" class="product__btn trw-align-addbtn-elem btn btn--quick-add visible-xs-inline-block visible-sm-inline-block js-ajax-add" tabindex="0">Add to cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</script>

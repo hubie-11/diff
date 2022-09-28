@@ -1,0 +1,13 @@
+{%- assign template_prefix = 'template-' -%}
+{%- assign template_customer = 'customer' -%}
+
+{%- if template contains template_customer -%}
+	{%- assign template_class = template_prefix | append: template_customer -%}
+	{%- assign template_class = template_class | append: ' ' | append: template_prefix | append: template_customer | append: '--' | append: template.name -%}
+{%- else -%}
+	{%- assign template_class = template_prefix | append: template.name -%}
+{%- endif -%}
+
+{%- if template.suffix -%}
+	{%- assign template_class = template_class | append: ' ' | append: template_prefix | append: template.name | append: '--' | append: template.suffix -%}
+{%- endif -%}

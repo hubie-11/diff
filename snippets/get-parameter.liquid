@@ -1,0 +1,22 @@
+{%- assign param = get_parameter | default: '' -%}
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last | replace:'\/','/' | replace:'%20',' ' | replace:'\u0026','&' -%}
+
+{%- assign keys = page_url | split: '?' | last | split: '&' -%}
+
+{%- assign get = '' -%}
+
+{%- for key in keys -%}
+  {%- assign key_params = key | split: '=' -%}
+  {%- assign key_name = key_params | first -%}
+  {%- assign key_value = key_params | last -%}
+
+  {%- if key_name == param -%}
+      {%- assign get = key_value | strip_html -%}
+
+      {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{{- get -}}

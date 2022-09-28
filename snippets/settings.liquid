@@ -1,0 +1,111 @@
+{%- include 'body_class' -%}
+
+{%- capture theme_title -%}
+	{{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} | {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}
+	{% endunless %}
+{%- endcapture -%}
+
+{%- capture theme_styles -%}
+	{{ 'bundle.css' | asset_url | stylesheet_tag }}
+	{{ 'custom_bundle.css' | asset_url | stylesheet_tag }}
+	{{ 'custom.scss.css' | asset_url | stylesheet_tag }}
+
+	{%- comment -%}
+		Theme settings styles:
+	{%- endcomment -%}
+
+	{%- include 'theme-settings-styles' -%}
+{%- endcapture -%}
+
+{%- capture theme_scripts -%}
+	{%- include 'locale' -%}
+
+	<script>
+	  Shopify.theme.settings = Shopify.theme.settings || {};
+	  Shopify.theme.settings['template'] = '{{-template-}}';
+	  Shopify.theme.settings['product_image_size'] = '{{ settings.product_image_size }}';
+	  Shopify.theme.settings['product_swap_images'] = {{ settings.show_secondary_image_on_hover }};
+	  Shopify.theme.settings['enable_quick_add'] = {{ settings.enable_quick_add }};
+	  Shopify.theme.settings['product_info_align'] = '{{ settings.product_info_align }}';
+	  Shopify.theme.settings['product_info_spacing'] = '{{ settings.product_info_spacing }}';
+	  Shopify.theme.settings['product_title_price_align'] = '{{ settings.product_title_price_align }}';
+	  Shopify.theme.settings['show_vendor'] = {{ settings.show_vendor }};
+	  Shopify.theme.settings['show_swatches'] = {{ settings.show_swatches }};
+	  Shopify.theme.settings['show_swatches_on_hover'] = {{ settings.show_swatches_on_hover }};
+	  Shopify.theme.settings['show_badges'] = {{ settings.show_badges }};
+	  Shopify.theme.settings['badges_position'] = '{{ settings.badges_position }}';
+	  Shopify.theme.settings['badge_sold_out_text'] = '{{ settings.badge_sold_out_text }}';
+	  Shopify.theme.settings['badge_sold_out_color'] = '{{ settings.badge_sold_out_color }}';
+	  Shopify.theme.settings['badge_sold_out_bg_color'] = '{{ settings.badge_sold_out_bg_color }}';
+	  Shopify.theme.settings['badge_sale_text'] = '{{ settings.badge_sale_text }}';
+	  Shopify.theme.settings['badge_sale_color'] = '{{ settings.badge_sale_color }}';
+	  Shopify.theme.settings['badge_sale_bg_color'] = '{{ settings.badge_sale_bg_color }}';
+	  Shopify.theme.settings['badge_new_text'] = '{{ settings.badge_new_text }}';
+	  Shopify.theme.settings['badge_new_color'] = '{{ settings.badge_new_color }}';
+	  Shopify.theme.settings['badge_new_bg_color'] = '{{ settings.badge_new_bg_color }}';
+	  Shopify.theme.settings['badge_new_days_offset'] = '{{ settings.badge_new_days_offset }}';
+
+		Shopify.theme.settings['search_words_1'] = '{{ settings.words_1 }}';
+		Shopify.theme.settings['search_url_1'] = '{{ settings.words_1_redirect }}';
+
+		Shopify.theme.settings['search_words_2'] = '{{ settings.words_2 }}';
+		Shopify.theme.settings['search_url_2'] = '{{ settings.words_2_redirect }}';
+
+		Shopify.theme.settings['search_words_3'] = '{{ settings.words_3 }}';
+		Shopify.theme.settings['search_url_3'] = '{{ settings.words_3_redirect }}';
+
+		Shopify.theme.settings['search_words_4'] = '{{ settings.words_4 }}';
+		Shopify.theme.settings['search_url_4'] = '{{ settings.words_4_redirect }}';
+
+		Shopify.theme.settings['search_words_5'] = '{{ settings.words_5 }}';
+		Shopify.theme.settings['search_url_5'] = '{{ settings.words_5_redirect }}';
+
+		Shopify.theme.settings['search_words_6'] = '{{ settings.words_6 }}';
+		Shopify.theme.settings['search_url_6'] = '{{ settings.words_6_redirect }}';
+
+		Shopify.theme.settings['search_words_7'] = '{{ settings.words_7 }}';
+		Shopify.theme.settings['search_url_7'] = '{{ settings.words_7_redirect }}';
+
+		Shopify.theme.settings['search_words_8'] = '{{ settings.words_8 }}';
+		Shopify.theme.settings['search_url_8'] = '{{ settings.words_8_redirect }}';
+	</script>
+
+	{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+	{%- if template contains 'customers' -%}
+		{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+		{{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+	{%- endif -%}
+
+	{%- if template contains 'product' or template contains 'wishlist' -%}
+		<script>
+			var Shopify = Shopify || {};
+			Shopify.product = {{ product | json }};
+		</script>
+	{%- endif -%}
+
+	<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+
+	{{ 'bundle.js' | asset_url | script_tag }}
+	{{ 'custom_bundle.js' | asset_url | script_tag }}
+
+	{%- comment -%} TRW 11/24/2020 START {%- endcomment -%}
+	<script src="{{ 'trw.md.js' | asset_url }}" type="module"></script>
+	{%- comment -%} TRW 11/24/2020 END {%- endcomment -%}
+
+	{%- if settings.klaviyo_api_key != blank -%}
+		<script type="text/javascript" async src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id={{- settings.klaviyo_api_key -}}"></script>
+	{%- endif -%}
+
+	<script>
+		window.custom_embroidery_id = "{{ all_products[settings.embroidery_product].variants.first.id }}";
+		window.custom_embroidery_left_chest_id = "{{ all_products[settings.embroidery_left_chest_product].variants.first.id }}";
+		window.custom_embroidery_right_cuff_id = "{{ all_products[settings.embroidery_right_cuff_product].variants.first.id }}";
+		window.custom_embroidery_hat_left_id = "{{ all_products[settings.embroidery_hat_left_product].variants.first.id }}";
+		window.custom_embroidery_hat_right_id = "{{ all_products[settings.embroidery_hat_right_product].variants.first.id }}";
+		window.custom_embroidery_bag_id = "{{ all_products[settings.embroidery_bag_product].variants.first.id }}";
+	</script>
+
+	<!-- Accessibe Script -->
+ 	<script>(function(document, tag) { var script = document.createElement(tag); var element = document.getElementsByTagName('body')[0]; script.src = 'https://acsbap.com/apps/app/assets/js/acsb.js'; script.async = true; script.defer = true; (typeof element === 'undefined' ? document.getElementsByTagName('html')[0] : element).appendChild(script); script.onload = function() { acsbJS.init({ statementLink : '', feedbackLink : '', footerHtml : '', hideMobile : false, hideTrigger : false, language : 'en', position : 'right', leadColor : '#146FF8', triggerColor : '#146FF8', triggerRadius : '50%', triggerPositionX : 'right', triggerPositionY : 'bottom', triggerIcon : 'default', triggerSize : 'medium', triggerOffsetX : 20, triggerOffsetY : 20, mobile : { triggerSize : 'small', triggerPositionX : 'right', triggerPositionY : 'bottom', triggerOffsetX : 0, triggerOffsetY : 0, triggerRadius : '0' } }); };}(document, 'script'));</script>
+{%- endcapture -%}

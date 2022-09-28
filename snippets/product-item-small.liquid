@@ -1,0 +1,72 @@
+{%- assign product_title = _title | default: __product.title -%}
+{%- assign product_title_mobile = _title_mobile -%}
+{%- assign product_subtitle = _subtitle | default: __product.description | truncatewords: 5 -%}
+{%- assign product_subtitle_mobile = _subtitle_mobile -%}
+{%- assign default_btn_text = 'products.product.add_to_cart' | t -%}
+{%- assign btn_text = _btn_text | default: default_btn_text -%}
+{%- assign btn_text_mobile = _btn_text_mobile -%}
+
+<div class="product-item-small {{ class }}" id="{{- id -}}">
+  <div class="product__inner">
+    {%- if __product.images[0] -%}
+      <div class="product__images">
+        <a href="{{- __product.url -}}" class="product__image lazyload" data-bg="{{ __product.images[0] | img_url: '400x' }}" role="img" aria-label="{{ __product.images[0].alt | escape }}"></a>
+
+        {%- if __product.images[1] -%}
+          <a href="{{- __product.url -}}" class="product__image lazyload" data-bg="{{ __product.images[1] | img_url: '400x' }}" role="img" aria-label="{{ __product.images[1].alt | escape }}"></a>
+        {%- endif -%}
+      </div><!-- /.product__images -->
+    {%- endif -%}
+
+    <div class="product__content">
+      <h4 class="{%- if product_title_mobile != blank -%}hidden-xs{%- endif -%}">
+        <a href="{{- __product.url -}}">{{- product_title -}}</a>
+      </h4>
+
+      {%- if product_title_mobile != blank -%}
+        <h4 class="visible-xs-block">
+          <a href="{{- __product.url -}}">{{- product_title_mobile -}}</a>
+        </h4>
+      {%- endif -%}
+
+      {%- if product_subtitle != blank -%}
+        <p class="{%- if product_subtitle_mobile != blank -%}hidden-xs{%- endif -%}">{{- product_subtitle -}}</p>
+
+        {%- if product_subtitle_mobile != blank -%}
+          <p class="visible-xs-block">{{- product_subtitle_mobile -}}</p>
+        {%- endif -%}
+      {%- endif -%}
+
+      <div class="product__actions">
+        {%- if __product.has_only_default_variant == true -%}
+          {% form 'product', __product %}
+            <input type="hidden" name="id" value="{{- __product.variants[0].id -}}">
+
+            <button
+              type="submit"
+              name="add"
+              class="btn btn--block js-ajax-add"
+
+              {% unless __product.available %}
+                disabled
+              {% endunless %}
+            >
+              {%- if __product.available -%}
+                <span class="{%- if btn_text_mobile != blank -%}hidden-xs{%- endif -%}">{{ btn_text }}</span>
+                {% if btn_text_mobile != blank %}
+                  <span class="visible-xs-inline-block">{{ btn_text_mobile }}</span>
+                {% endif %}
+                -
+                <span>{{- __product.variants[0].price | money -}}</span>
+              {%- else -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- endif -%}
+            </button>
+          {% endform %}
+        {%- else -%}
+          <a href="{{- __product.url -}}" class="btn btn--block">{{- 'products.product.choose_variant' | t -}}</a>
+        {%- endif -%}
+      </div><!-- /.product__actions -->
+    </div><!-- /.product__content -->
+  </div><!-- /.product__inner -->
+</div><!-- /.product-item-small product-items__item -->

@@ -1,0 +1,35 @@
+{% assign share_url = shop.url | append: request.path  %}
+{% assign share_url_encoded = share_url | url_encode %}
+{% assign share_title = article.title | default: product.title | default: page.title | default: collection.title %}
+{% assign share_title_encoded = share_title | url_encode %}
+{% assign share_image = article.image | default: product.featured_image | default: collection.image | img_url: '800x' | url_encode %}
+
+{% capture mailto_body %}
+  {{ share_title }} -- {{ share_url }}
+
+  {{ article.content | default: product.content | default: page.content | default: collection.description | truncatewords: 20 | strip_html }}
+{% endcapture %}
+
+{% capture share_links %}
+twitter|Share on Twitter|https://twitter.com/intent/tweet/?text={{ share_title_encoded }}&amp;url={{ share_url_encoded }}
+pinterest|Share on Pinterest|https://pinterest.com/pin/create/button/?url={{ share_url_encoded }}&amp;media={{ share_image }}&amp;description={{ share_title_encoded }}
+facebook|Share on Facebook|https://facebook.com/sharer/sharer.php?u={{ share_url_encoded }}
+{% endcapture %}
+{% assign share_links = share_links | newline_to_br | split: '<br />' %}
+
+<ul class="{{ class }}">
+  {% for share_link in share_links %}
+    {% assign link = share_link | strip | split: '|' %}
+    {%- if link == empty -%}
+      {%- continue -%}
+    {%- endif -%}
+
+    <li>
+        <a href="{{ link[2] }}" target="_blank" title="{{ link[1] }}" aria-label="{{ link[1] }}">
+          {%- include 'icons', icon: link[0] -%}
+
+          {{- link[1] -}}
+        </a>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,96 @@
+{%- if prefixes_array.size > 0 -%}
+  {%- assign collection_url = collection.url | default: '/collections/all' -%}
+  {%- assign _separator = separator | default: ':' -%}
+
+  <div class="filters {{ additional_classes }} js-filters"{% if has_id %} id="filters"{% endif %} data-collection="{{- collection_url -}}">
+    <div class="hidden hidden-xs hidden-sm js-clear-all">
+      <a href="{{- collection.url -}}{%- if collection.sort_by -%}?sort_by={{- collection.sort_by -}}{%- endif -%}">
+        {%- include 'icons', icon: 'close' -%}
+
+        <span>{{- 'collections.filters.clear' | t -}}</span>
+      </a>
+    </div>
+    <div class="filters__head visible-xs-block visible-sm-block">
+      <a href="#filters" class="js-click js-trigger-no-scroll">
+        {%- include 'icons', icon: 'close' -%}
+      </a>
+    </div><!-- /.filters__head -->
+    <div class="filters__options">
+      {%- assign filters_html = '' -%}
+
+      {%- for prefix in prefixes_array -%}
+        {%- assign prefix_handle = prefix | handle -%}
+        {%- assign prefix_text = prefix | remove: _separator | capitalize -%}
+        {%- assign prefix_option = '' -%}
+        {%- assign counter = 0 -%}
+
+        {%- for tag in collection.all_tags -%}
+          {%- assign tag_handle = tag | split: _separator | first | handle -%}
+
+          {%- if tag_handle == prefix_handle -%}
+            {%- capture option_html -%}
+              <li class="tag_{{ tag | split: _separator | last | strip | handle }}">
+                <a
+                  href="{{ tag | handle }}"
+                  class="{% if prefix_handle == 'color' %}swatches__item swatch swatch__color-{{ tag | split: _separator | last | handle }} {% endif %}js-filter-option"
+                  {% if prefix_handle == 'color' %}
+                    data-handle-name="{{ tag | split: _separator | last | handle }}"
+                    style="background-color: {{ tag | split: _separator | last | handle }}"
+                  {% endif %}
+                  title="{{ tag | split: _separator | last | strip }}"
+                >
+                </a>
+                 <a href="{{ tag | handle }}"
+                  class="normal-txt {% if prefix_handle == 'color' %}swatches__item swatch swatch__color-{{ tag | split: _separator | last | handle }} {% endif %}js-filter-option"
+                  {% if prefix_handle == 'color' %} data-handle-name="{{ tag | split: _separator | last | handle }}"{% endif %} title="{{ tag | split: _separator | last | strip }}">
+                   <span> {{ tag | split: _separator | last | strip }}</span>
+                </a>
+              </li>
+            {%- endcapture -%}
+
+            {%- assign prefix_option = prefix_option | append: option_html -%}
+            {%- assign counter = counter | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- capture prefix_option -%}
+          <div class="filters__option{% if counter == 0 %} hidden{% endif %} {% if prefix_handle == 'color' %}filters__option--color{% endif %} js-accordion" data-type="{{prefix_handle}}">
+            <a href="#" class="js-filter-text">
+              {{prefix_text}} <span class="filter__counter">({{counter}})</span>
+
+              {%- include 'icons', icon: 'chevron-down-alt' -%}
+            </a>
+
+            <ul class="{% if prefix_handle == 'color' %}swatches {% endif %} js-accordion-content" style="display: none;">
+              {{prefix_option}}
+            </ul>
+          </div><!-- /.filters__option -->
+        {%- endcapture -%}
+
+        {%- assign filters_html = filters_html | append: prefix_option -%}
+      {%- endfor -%}
+
+      {{ filters_html }}
+
+      <div class="filters__foot">
+        <a href="{{- collection.url -}}{%- if collection.sort_by -%}?sort_by={{- collection.sort_by -}}{%- endif -%}" class="btn btn--inversed hidden js-clear-all">{{- 'collections.filters.clear' | t -}}</a>
+
+        <a href="#filters" class="btn js-click js-trigger-no-scroll js-filters-apply">SHOW RESULTS</a>
+      </div><!-- /.filters__foot -->
+    </div><!-- /.filtes__options -->
+  </div><!-- /.filters -->
+
+<style>
+  .filters ul{display:flex; flex-direction: column;}
+
+  .tag_os { order: 1 }
+  .tag_one-size { order: 2 }
+  .tag_xs { order: 3 }
+  .tag_s { order: 4 }
+  .tag_m { order: 5 }
+  .tag_l { order: 6 }
+  .tag_xl { order: 7 }
+  .tag_2xl { order: 8 }
+  .tag_3xl { order: 9 }
+</style>
+{%- endif -%}

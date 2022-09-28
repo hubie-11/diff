@@ -1,0 +1,84 @@
+{% unless product.metafields.embroidery_left_ches.enabled %}
+<div class="js-embroidery-error hidden">
+    {{- settings.embroidery_hat_left_error -}}
+</div><!-- /.embroidery-error -->
+
+<div class="tooltip-right-cuff">
+    <div class="tooltip-header">
+        <a href="#embroidery_hat_left_see_details" class="js-close-embroidery-right-cuff-tooltip" data-js-embroidery-right-cuff-tooltip-toggle>×</a>
+    </div>
+    {{ settings.embroidery_right_cuff_tooltip }}
+</div>
+<button
+        class="c-embroidery-main-cta"
+        type="button"
+        aria-label="Show embroidery modal"
+        data-js-embroidery-right-cuff-toggle
+        data-js-embroidery-right-cuff-main-cta
+>
+    <div class="c-embroidery-main-cta-circle"></div><span style="color: {{ product.metafields.embroidery_right_cuf.button_text_color }}; background-color: {{ product.metafields.embroidery_right_cuf.button_background }};">{{ product.metafields.embroidery_right_cuf.button_title | default: "CUSTOM EMBROIDERY" }}</span>
+</button>
+<a href="#embroidery_hat_left_see_details" class="see_details" data-js-embroidery-right-cuff-tooltip-toggle>SEE DETAILS</a>
+{% endunless %}
+<div
+        class="c-embroidery"
+        data-js-embroidery-right-cuff
+>
+    <h4>MONOGRAM THE RIGHT CUFF ($10)</h4>
+    <div class="custom-text">
+        <div class="title">1. ADD TEXT:</div>
+        <label for="customText">
+        <input id="customTextRight" type="text" minlength="{{ product.metafields.embroidery_right_cuf.min_characters | default: 1 }}" maxlength="{{ product.metafields.embroidery_right_cuf.characters | default: 3 }}" name="properties[custom_right_cuff_text]" required>
+        </label>
+        <small>({{ product.metafields.embroidery_right_cuf.characters | default: 3 }} characters - NO SPECIAL CHARACTERS)</small>
+    </div>
+    <div class="custom-color">
+        <div class="title">2. CHOOSE COLOR:</div>
+        <div class="custom-color-selector">
+            {% for color in product.metafields.embroidery_right_cuf.colors %}
+                {% assign color_name = product.metafields.embroidery_right_cuf.color_names[forloop.index0] %}
+            <input id="customColorRight{{ forloop.index }}" type="radio" value="{{ color_name }}" name="properties[custom_right_cuff_color]" {% if forloop.first == true %}checked{% endif %} data-color="{{ color }}">
+            <label for="customColorRight{{ forloop.index }}">
+                <div class="white" style="background: {{ color }};"></div>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="custom-style">
+        <div class="title">3. CHOOSE STYLE:</div>
+        <div class="custom-style-selector">
+            <input id="customStyleRightWhite" type="radio" value="BLOCK" name="properties[custom_right_cuff_style]" data-font="c-embroidery-font__preview--font-circular" checked>
+            <label for="customStyleRightWhite">
+            <div class="white c-embroidery-font__preview--font-circular">BLOCK</div>
+            </label>
+            <input id="customStyleRightBlue" type="radio" value="SCRIPT" name="properties[custom_right_cuff_style]" data-font="c-embroidery-font__preview--font-shell">
+            <label for="customStyleRightBlue">
+            <div class="blue c-embroidery-font__preview--font-shell">SCRIPT</div>
+            </label>
+            <input id="customStyleRightBlack" type="radio" value="MONOGRAM" name="properties[custom_right_cuff_style]" data-font="c-embroidery-font__preview--font-shell">
+            <label for="customStyleRightBlack">
+                <div class="black c-embroidery-font__preview--font-shell"><span class="normal-txt">MONOGRAM</span><br><span class="script">SCRIPT</span></div>
+            </label>
+        </div>
+    </div>
+    <div class="view-customization">
+        <a href="#">Click to View Customization</a>
+    </div>
+    <div class="c-embroidery__preview-container c-embroidery__preview-right-cuff-container {% if product.metafields.embroidery_left_ches.enabled and product.metafields.embroidery_right_cuf.enabled %}preview_one{% endif %}">
+        <div class="close_preview">
+        ×
+        </div>
+        {% if product.metafields.embroidery_right_cuf.image %}
+            <img
+                    class="c-engraving__image"
+                    src="{{ product.metafields.embroidery_right_cuf.image[0].src }}"
+                    alt="{{ product.title }} — embroidery area"
+            />
+        {% endif %}
+        <div class="c-embroidery__preview" data-js-embroidery-right-cuff-preview>
+            <div class="c-embroidery-font__preview--font-circular">
+                <div class="c-embroidery__preview_text"></div>
+            </div>
+        </div>
+    </div>
+</div>
