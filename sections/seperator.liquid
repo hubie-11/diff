@@ -1,0 +1,68 @@
+{%- assign _section = section.settings -%}
+
+<div class="section-seperator" data-id="{{ section.id }}"></div><!-- /.section-seperator -->
+
+<style type="text/css" media="screen">
+  .section-seperator[data-id="{{ section.id }}"] {
+    background-color: {{ _section.background_color }}; 
+    height: {{ _section.spacing }}px;
+  }
+
+  @media (max-width: 768px) {
+    .section-seperator[data-id="{{ section.id }}"] {
+      height: {{ _section.spacing_mobile }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Seperator",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "transparent"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 0,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "spacing_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Seperator",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,40 @@
+{%- assign _section = section.settings -%}
+
+{%- if _section.html != blank and settings.klaviyo_api_key != blank -%}
+  <section class="section-subscribe" data-id="{{- section.id -}}">
+    <div class="shell">
+      {{- _section.html -}}
+    </div><!-- /.shell -->
+  </section><!-- /.section-subscribe -->
+{%- endif -%}
+
+<style type="text/css">
+  .section-subscribe[data-id="{{- section.id -}}"] {
+    background-color: {{ _section.background_color }}; 
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Subscribe",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "textarea",
+      "id": "html",
+      "label": "Form HTML",
+      "info": "More info [here](https://help.klaviyo.com/hc/en-us/articles/360002035871-Install-Klaviyo-Signup-Forms)"
+    }
+  ]
+}
+{% endschema %}

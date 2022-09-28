@@ -1,0 +1,167 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+
+<div class="cart-drawer" id="cart-drawer">
+  <form action="/cart" method="post" novalidate class="form form--default">
+    <div class="cart__inner">
+      <header class="cart__head">
+        <div class="cart__utils">
+          <a href="#cart-drawer" class="cart__close js-click js-trigger-no-scroll">
+            {%- include 'icons', icon: 'arrow-right' -%}
+          </a>
+
+          <a href="{{- routes.cart_url -}}" class="cart__count btn-cart btn-cart--large js-cart-count{% if cart.item_count > 0  %} has-items{% endif %}">
+            {%- include 'icons', icon: 'cart' -%}
+
+            <span>{{- cart.item_count -}}</span>
+          </a>
+        </div><!-- /.cart__utils -->
+
+        <div class="cart__bar js-cart-shipping-bar">
+          {%- include 'free-shipping-bar' -%}
+        </div><!-- /.cart__bar -->
+      </header><!-- /.cart__head -->
+
+      <div class="cart__body">
+        <div class="cart__details js-cart-items-holder{% if cart.item_count == 0 %} hidden{% endif %}">
+          <div class="table-products table-products--small">
+            {%- include 'cart-items' -%}
+          </div><!-- /.table-products table-products-/-small -->
+
+          <div class="js-cart-summary">
+            {%- include 'cart-summary' -%}
+          </div><!-- /.js-cart-summary -->
+
+          <!-- Route Code Edited 07/13/2021 -->
+          <div class="route-div"></div>
+          <style>
+            .route-widget .rw-contents .rw-left .rw-route-logo{
+            	margin-top: 11px;
+            }
+          </style>
+          <!-- Route Code End -->
+
+          <div class="cart-afterpay-message-wrapper js-cart-payment-message">
+						<div class="cart-afterpay-message-delimiter"></div><!-- /.cart-afterpay-message-delimiter -->
+            <afterpay-placement
+              id="mini-cart-message"
+              data-amount="{{ cart.total_price }}"
+              data-locale="{{ shop_locale.iso_code | replace: '-', '_' }}"
+              data-currency="{{ cart.currency.iso_code }}"
+            >
+            </afterpay-placement>
+					</div><!-- /.cart-afterpay-message -->
+
+
+          <button type="submit" name="checkout" class="btn btn--block">{{- 'cart.general.checkout' | t -}}</button>
+
+          <div class="js-cart-checkout-buttons"></div>
+
+          <i data-govx-id="s"></i>
+
+          {%- if settings.cross_sell_handles != blank or settings.cross_sell_use_api -%}
+            <div class="cross-sell cart__cross-sell js-minicart-cross-sell">
+              {%- if settings.cross_sell_title != blank -%}
+                <h6>{{- settings.cross_sell_title -}}</h6>
+              {%- endif -%}
+
+              <div class="cross-sell__holder js-minicart-cross-sell-slider" data-use-api="{{- settings.cross_sell_use_api -}}">
+                {%- if settings.cross_sell_handles != blank and settings.cross_sell_use_api == false -%}
+                  {%- assign product_handles = settings.cross_sell_handles | strip | strip_html | newline_to_br | replace: '<br />', ',' | strip_newlines | split: ',' -%}
+
+                  {%- for handle in product_handles -%}
+                    {%- assign cross_sell_product = all_products[handle] -%}
+
+                    {%- if cross_sell_product != empty -%}
+                      <div class="cross-sell__holder-item">
+                        <div class="cross-sell__item">
+                          <a href="{{- cross_sell_product.url -}}" title="{{- cross_sell_product.title -}}" class="cross-sell__item-image">
+                            <img src="{{- cross_sell_product.featured_image | img_url: '140x' -}}" alt="{{- cross_sell_product.title -}}">
+                          </a>
+
+                          <div class="cross-sell__item-content">
+                            <h5>
+                              <a href="{{- cross_sell_product.url -}}" title="{{- cross_sell_product.title -}}">
+                                <span>{{- cross_sell_product.title -}}</span>
+
+                                <br />
+
+                                <span>{{- cross_sell_product.price | money_without_trailing_zeros -}}</span>
+                              </a>
+                            </h5>
+
+                            <div class="cross-sell__item-form">
+                              {%- assign form_id = 'cross-sell-product-form-' | append: cross_sell_product.id -%}
+                              {% form 'product', cross_sell_product, class: 'js-product-form', id: form_id %}
+                                <input type="hidden" name="id" value="{{- cross_sell_product.selected_or_first_available_variant.id -}}">
+
+                                <input type="hidden" name="quantity" value="1" class="js-product-quantity">
+
+                                <button type="submit" name="add" class="js-ajax-add">{{- 'products.product.add_to_cart' | t -}}</button>
+                              {% endform %}
+                            </div><!-- /.cross-sell__item-form -->
+                          </div><!-- /.cross-sell__item-content -->
+                        </div><!-- /.cross-sell__item -->
+                      </div><!-- /.cross-sell__holder-item -->
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div><!-- /.cart__cross-sell -->
+          {%- endif -%}
+        </div><!-- /.cart__details -->
+
+        <div class="cart__empty js-cart-empty{% if cart.item_count > 0 %} hidden{% endif %}">
+          <h4>{{- 'cart.general.empty' | t -}}</h4>
+
+          {%- if _blocks.size > 0 -%}
+            <ul class="list-links">
+              {%- for block in _blocks -%}
+                {%- assign _block = block.settings -%}
+
+                {%- if _block.title != blank and _block.link_url != blank -%}
+                  <li>
+                    <a href="{{- _block.link_url -}}">{{- _block.title -}}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul><!-- /.list-links -->
+          {%- endif -%}
+        </div><!-- /.cart__empty -->
+      </div><!-- /.cart__body -->
+    </div><!-- /.cart__inner -->
+  </form>
+</div><!-- /#cart-drawer.cart-drawer -->
+
+<a href="#cart-drawer" class="cart-drawer-overlay js-click js-trigger-no-scroll"></a>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Empty cart links"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Link title"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

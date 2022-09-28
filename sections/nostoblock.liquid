@@ -1,0 +1,28 @@
+<div class="nosto-custom-section">
+    {{section.settings.custom_html}}
+</div>
+
+{% schema %}
+    {
+        "name": "Nosto Block",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title"
+            },
+            {
+                "type": "textarea",
+                "id": "custom_html",
+                "label": "Nosto Placement Div"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Nosto Block",
+                "category": "Nosto",
+                "settings": {}
+            }
+        ]
+    }
+{% endschema %}

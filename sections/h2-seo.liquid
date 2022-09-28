@@ -1,0 +1,46 @@
+{% if collection.metafields.accentuate.h2_seo != "" %}
+<div class="section__container">
+  <div class="shell">
+    {% if collection.metafields.accentuate.header_seo != "" %}
+      <h3 class="h3-seo">{{ collection.metafields.accentuate.header_seo }}</h3>
+    {% endif %}
+    <h2 class="h2-seo">{{ collection.metafields.accentuate.h2_seo }}</h2>
+  </div>
+</div>
+<style>
+.h3-seo {
+  margin: -10px auto 10px auto !important;
+  text-align: center;
+  max-width: 768px;
+}
+.h2-seo {
+  margin: 0 auto 40px auto !important;
+  text-align: center;
+  max-width: 786px;
+  font-size: {{section.settings.h2-font-size}}px;
+  font-family: Roboto Condensed !important;
+  text-transform: none;
+}
+.h2-seo * {
+  text-transform: none;
+}
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "H2 SEO",
+  "settings": [
+    {
+      "type": "range",
+      "id": "h2-font-size",
+      "label": "Font size",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ]
+}
+{% endschema %} 

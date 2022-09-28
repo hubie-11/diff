@@ -1,0 +1,58 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+
+<script type="text/javascript">
+  var badgesArray = [];
+
+  {% if _blocks.size > 0 %}
+    {% for block in _blocks %}
+      {% assign _block = block.settings %}
+
+      {% if _block.title != blank and _block.tag_anchor != blank %}
+        badgesArray.push({
+          tag: '{{ _block.tag_anchor }}',
+          text: '{{ _block.title }}',
+          color: '{{ _block.color }}',
+          bg_color: '{{ _block.bg_color }}'
+        })
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</script>
+
+{% schema %}
+{
+  "name": "Badges",
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tag_anchor",
+          "label": "Tag anchor",
+          "info": "The product must contain that tag, in order to show the badge. Note: The badges - 'New', 'Sale', 'Sold out' are auto-placed."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color",
+          "default": "#000"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,221 @@
+{%- assign _section = section.settings -%}
+
+{%- if _section.product_item != blank -%}
+  {%- assign ___product = all_products[_section.product_item] -%}
+
+  <div class="section-featured-product" id="section-featured-product-{{ section.id }}">
+    <div class="shell">
+      <div class="section__cols">
+        {%- if ___product.images.size > 0 -%}
+          <div class="section__col">
+            <div class="section__media">
+              {%- if ___product.images.size > 1 -%}
+                {%- include 'product-slider', _product: ___product, layout: _section.thumbs_layout, has_thumbs: true -%}
+              {%- else -%}
+                {%- include 'lazyload-image' _image: ___product.images[0], background: true, background_parameters: '1024x', additional_classes: 'section__image' -%}
+              {%- endif -%}
+            </div><!-- /.section__media -->
+          </div><!-- /.section__col -->
+        {%- endif -%}
+
+        <div class="section__col">
+          <div class="section__content">
+            <h2>{{- ___product.title -}}</h2>
+
+            <h4>{{- ___product.price | money -}}</h4>
+
+            {%- if ___product.description != blank -%}
+              {{- ___product.description -}}
+            {%- endif -%}
+
+            <div class="section__actions">
+              {% form 'product', ___product, class: 'form-product js-product-form' %}
+                {%- assign _product = ___product.selected_or_first_available_variant -%}
+
+                <select name="id" class="hidden">
+                  {% for variant in ___product.variants %}
+                    {%- include 'price' with variant, echo: false -%}
+
+                    <option
+                       value="{{- variant.id -}}"
+                       data-price="{{- output -}}"
+
+                      {% if _product.id == variant.id %}
+                         selected 
+                      {% endif %}
+
+                      {%- for option in variant.options -%}
+                        data-option{{- forloop.index -}}="{{- option | handle -}}"
+                      {%- endfor -%}
+
+                      data-variant-quantity="{{- variant.inventory_quantity -}}"
+                    >
+                      {{- variant.title -}}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                {%- unless ___product.has_only_default_variant -%}
+                  {%- for product_option in ___product.options_with_values -%}
+                    {%- assign option_name_handle = product_option.name | handle -%}
+
+                    {%- if option_name_handle == 'color' or option_name_handle == 'colour' -%}
+                      {%- assign color_option_index = product_option.position | minus: 1 -%}
+
+                      <div class="form__row form__swatches">
+                        <p>{{ 'products.product.color_option_label' | t }}: <strong class="js-color-selected">{{- _product.options[color_option_index] -}}</strong></p>
+
+                        {%- include 'swatches' -%}
+                      </div><!-- /.form__row form__swatches -->
+                    {%- elsif option_name_handle == 'size' -%}
+                      {%- assign size_option_index = product_option.position | minus: 1 -%}
+
+                      <div class="form__row form__sizes">
+                        <p>
+                          {{ 'products.product.size_option_label' | t }}:
+                          
+                          <strong class="js-size-selected">{{- _product.options[size_option_index] -}}</strong>
+                        </p>
+
+                        {%- include 'product-sizes' -%}
+                      </div><!-- /.form__row form__sizes -->
+                    {%- else -%}
+                      <div class="form__row">
+                        <label for="product-option-{{- option_name_handle -}}">{{- product_option.name -}}:</label>
+
+                        <div class="select">
+                          <select id="product-option-{{- option_name_handle -}}" class="js-product-option" data-option-position="{{- product_option.position -}}">
+                            {%- for value in product_option.values -%}
+                              <option value="{{- value | handle -}}">{{- value -}}</option>
+                            {%- endfor -%}
+                          </select>
+                        </div><!-- /.select -->
+                      </div><!-- /.form__row -->
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endunless -%}           
+                
+                <input type="hidden" name="updates[]" class="js-product-quantity" value="1">
+
+                <button
+                   type="submit"
+                   name="add"
+                   class="btn{% if settings.cart_type == 'drawer' %} js-ajax-add{% endif %}"
+
+                  {% unless _product.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {{- 'products.product.add_to_cart' | t -}}
+                </button>
+              {% endform %}
+            </div><!-- /.section__actions -->
+          </div><!-- /.section__content -->
+        </div><!-- /.section__col -->
+      </div><!-- /.section__cols -->
+    </div><!-- /.shell -->
+  </div><!-- /.section-featured-product -->
+{%- endif -%}
+
+<style type="text/css" media="screen" id="section-{{- section.id -}}">
+  .section-featured-product#section-featured-product-{{ section.id }} {
+    color: {{ _section.color }};
+    background-color: {{ _section.bg_color }};
+  }
+
+  .section-featured-product#section-featured-product-{{ section.id }} h2,
+  .section-featured-product#section-featured-product-{{ section.id }} h4 {
+    color: inherit;
+  }
+
+  .section-featured-product#section-featured-product-{{ section.id }} .section__actions button {
+    color: {{ _section.btn_color }};
+    background-color: {{ _section.btn_bg_color }};
+  }
+
+  .section-featured-product#section-featured-product-{{ section.id }} ol input:checked + label {
+    background-color: {{ _section.color }};
+    border-color: {{ _section.color }}; 
+    color: {{ _section.bg_color }}; 
+  }
+
+  .section-featured-product#section-featured-product-{{ section.id }} select {
+    color: {{ _section.bg_color }};
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product_item",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "thumbs_layout",
+      "label": "Product thumbnails position",
+      "options": [
+        {
+          "value": "slider_thumbs_left",
+          "label": "Left"
+        },
+        {
+          "value": "slider_thumbs_bottom",
+          "label": "Below"
+        }
+      ],
+      "default": "slider_thumbs_left"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Text color",
+      "default": "#fff"
+    },
+    {
+      "type": "paragraph",
+      "content": "Button"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button background color",
+      "default": "#fff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

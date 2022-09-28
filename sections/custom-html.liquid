@@ -1,0 +1,41 @@
+{%- assign _section = section.settings -%}
+
+{%- if _section.html != blank -%}
+  <div class="section-custom" data-id="{{- section.id -}}">
+    <div class="shell">
+      {{- _section.html -}}
+    </div><!-- /.shell -->
+  </div><!-- /.section-custom -->
+{%- endif -%}
+
+<style type="text/css">
+  .section-custom[data-id="{{- section.id -}}"] {
+    background-color: {{ _section.background_color }}; 
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom HTML",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "html",
+      "label": "HTML"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "transparent"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom HTML",
+      "category": "Others"
+    }
+  ]
+}
+{% endschema %}
