@@ -1,0 +1,118 @@
+<section class="section-account default--holder fade-in js-fade-in">
+  <div class="shell">
+    <div class="section__inner">
+      {%- include 'account', fragment: 'sidebar' -%}
+
+      <div class="section__content">
+        {%- include 'account', fragment: 'head' -%}
+
+        <h5>{{- 'customer.account.orders_subtitle' | t -}}</h5>
+
+        <div class="section__body">
+          {%- paginate customer.orders by 20 -%}
+            {%- if customer.orders.size != 0 -%}
+              <div class="table-order">
+                <table>
+                  <thead>
+                    <tr class="order">
+                      <th class="order__number">
+                        {{- 'customer.orders.order_number' | t -}}
+                      </th>
+
+                      <th class="order__date">
+                        {{- 'customer.orders.date' | t -}}
+                      </th>
+
+                      {%- comment -%} TRW 12/04/2020
+                      <th class="order__payment-status">
+                        {{- 'customer.orders.payment_status' | t -}}
+                      </th>
+                      {%- endcomment -%}
+
+                      
+                      <th class="order__fulfillment-status">
+                        {{- 'customer.orders.fulfillment_status' | t -}}
+                      </th>
+
+                      <th class="order__payment-status">
+                        Tracking #
+                      </th>
+
+                      <th class="order__total">
+                        {{- 'customer.orders.total' | t -}}
+                      </th>
+
+                      <th class="order__details">
+                        {{- 'customer.orders.details' | t -}}
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {%- for order in customer.orders -%}
+                      
+                      <tr class="order">
+                        <td
+                          class="order__number"
+                          data-heading="{{- 'customer.orders.order_number' | t -}}"
+                        >
+                          {{- order.name -}}
+                        </td>
+
+                        <td
+                          class="order__date"
+                          data-heading="{{- 'customer.orders.date' | t -}}"
+                        >
+                          {%- assign dateFormat = 'date_formats.long' | t -%}
+
+                          {{- order.created_at | date: dateFormat -}}
+                        </td>
+
+
+                        <td
+                        class="order__fulfillment-status"
+                        data-heading="{{- 'customer.orders.fulfillment_status' | t -}}"
+                      >
+                        {{- order.fulfillment_status_label -}}
+                      </td>
+
+
+                        <td
+                          class="order__payment-status"
+                          data-heading="Tracking #"
+                        >
+                          {%- comment -%} TRW 12/04/2020 START {%- endcomment -%}
+                          {% include 'trw-order-trcking-info' with order %}
+                          {%- comment -%} TRW 12/04/2020 END {%- endcomment -%}
+                        </td>
+
+                       
+                        <td
+                          class="order__total"
+                          data-heading="{{- 'customer.orders.total' | t -}}"
+                        >
+                          {{- order.total_price | money -}}
+                        </td>
+
+                        <td
+                          class="order__details"
+                          data-heading="{{- 'customer.orders.details' | t -}}"
+                        >
+                          <a href="{{- order.customer_url -}}">{{- 'customer.orders.order_details_link' | t -}}</a>
+                        </td>
+                      </tr>
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div><!-- /.table -->
+
+              {%- include 'pagination' -%}
+            {%- else -%}
+              <p>{{- 'customer.orders.none' | t -}}</p>
+            {%- endif -%}
+          {%- endpaginate -%}
+        </div><!-- /.section__body -->        
+      </div><!-- /.section__content -->
+    </div><!-- /.section__inner -->
+  </div><!-- /.shell -->
+</section><!-- /.section-account -->

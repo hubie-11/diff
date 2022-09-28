@@ -1,0 +1,71 @@
+
+{% render 'nosto-element', id:'searchpage-nosto-1' %}
+<div class="search--default default--holder">
+  <div class="shell">
+    <div class="page__head">
+      <h1 class="page__title">
+          Search Results for '{{search.terms}}'
+      </h1>
+    </div><!-- /.page__head -->
+  </div><!-- /.shell -->
+
+  <div class="search__results">
+    <div class="shell">
+      {%- include 'form-search' -%}
+
+      {%- if search.results != empty and search.performed -%}
+        <p class="results">
+          {{- 'general.search.results_for_html' | t: terms: search.terms -}}
+        </p>
+      {%- elsif search.results == empty and search.performed -%}
+        <p class="no-results">
+          {{- 'general.search.no_results_html' | t: terms: search.terms -}}
+        </p>
+      {%- endif -%}
+    </div><!-- /.shell -->
+
+    <div class="shell shell--fluid">
+      {%- if search.performed -%}
+        {%- paginate search.results by 12 -%}
+          {%- if search.results != empty and search.terms != "" -%}
+
+              <div class="collection__items">
+                <div class="grid grid--layout-3 grid--layout-mobile-2 js-collection-products">
+                  {%- for _item in search.results -%}
+                    {%- if _item.object_type == 'article' -%}
+                      {%- include 'article-item' with _item -%}
+                    {%- else _item.object_type == 'product' -%}
+
+                      {%- assign collection_products_per_row_mobile = 2 -%}
+                      {%- assign additional_product_item_classes = '' -%}
+                      {%- assign is_half_on_mobile = false -%}
+
+                      {%- if collection_products_per_row_mobile == 2 -%}
+                        {%- assign additional_product_item_classes = additional_product_item_classes | append: 'product-item--half-mobile' -%}
+                        {%- assign is_half_on_mobile = true -%}
+                      {%- endif -%}
+
+                      {%- unless _item.tags contains 'no_cross_sell' -%}
+                        <div class="product grid__item">
+                          {%- include 'product-item', current_product: _item, show_video: true, additional_classes: additional_product_item_classes, is_half_on_mobile: is_half_on_mobile, hide_form: false -%}
+                        </div>
+                      {%- endunless -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div><!-- /.grid -->
+              </div><!-- /.collection__items -->
+
+              {%- include 'pagination' -%}
+
+          {% else %}
+
+          {% include 'product-carousel' %}
+
+          {%- endif -%}
+        {%- endpaginate -%}
+      {%- endif -%}
+    </div><!-- /.shell shell-/-fluid -->
+  </div><!-- /.search__results -->
+</div>
+
+{% render 'nosto-element', id:'searchpage-nosto-2' %}

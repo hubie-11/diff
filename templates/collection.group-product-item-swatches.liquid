@@ -1,0 +1,13 @@
+{%- layout none -%}
+
+{%- assign template_url = '?view=product-item' -%}
+
+{%- capture is_mobile_grid -%}
+  {%- render 'get-parameter', get_parameter: 'mobile_grid' -%}
+{%- endcapture -%}
+
+{%- if is_mobile_grid != '' -%}
+  {%- assign template_url = template_url | append: '&mobile_grid=' -%}
+{%- endif -%}
+
+{%- render 'group-products-swatches', view_template: template_url, is_product_item: true -%}
