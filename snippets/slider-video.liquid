@@ -1,0 +1,67 @@
+{%- if _block.slide_video_url != blank -%}
+  {%- assign video_type = _block.slide_video_url.type -%}
+  {%- assign video_id = _block.slide_video_url.id -%}
+
+  {%- capture video_html -%}
+    {%- case video_type -%}
+      {%- when 'vimeo' -%}
+        {%- assign video_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=1&loop=1&background=1&controls=0&muted=1' -%}
+        {%- assign video_popup_url = 'https://vimeo.com/' | append: video_id -%}
+      {%- when 'youtube' -%}
+        {%- assign video_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?autoplay=1&controls=0&loop=1&playsinline=1&mute=1' -%}
+        {%- assign video_popup_url = 'https://www.youtube.com/watch?v=' | append: video_id -%}
+    {%- endcase -%}
+    {% assign video_popup_url = _block.slide_video_url %}
+    {%- include 'lazyload-image' _iframe: video_popup_url has_loop: _block.loop_video -%}
+
+    {%- if _block.slide_video_popup_play_desk -%}
+          <a href="{{- video_popup_url -}}" class="slider__slide-video-btn btn-play js-popup-video button_position_{{_block.play_button_position}}_{{block.id}} ">
+        <span></span>
+
+        {{- 'sections.hero_slider.play_in_lightbox' | t -}}
+      </a>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  <div class="slider__slide-video{% if _block.slide_video_url_mobile != blank or _block.slide_video_placeholder_mobile != blank %} hidden-xs{% endif %}">
+    {%- if _block.video_link_url != blank -%}
+      <a target="_blank" class="slider__slide-video-link" href="{{ _block.video_link_url }}"></a>
+    {%- endif -%}
+
+    {{- video_html -}}
+  </div><!-- /.slider__slide-video -->
+
+  {%- if _block.slide_video_url_mobile != blank or _block.slide_video_placeholder_mobile != blank -%}
+    {%- assign video_type_mobile = _block.slide_video_url_mobile.type | default: _block.slide_video_url.type -%}
+    {%- assign video_id_mobile = _block.slide_video_url_mobile.id | default: _block.slide_video_url.id -%}
+
+    {%- case video_type_mobile -%}
+      {%- when 'vimeo' -%}
+        {%- assign video_url_mobile = 'https://player.vimeo.com/video/' | append: video_id_mobile | append: '?autoplay=1&loop=1&background=1&controls=0&muted=1' -%}
+        {%- assign video_popup_url_mobile = 'https://vimeo.com/' | append: video_id_mobile -%}
+      {%- when 'youtube' -%}
+        {%- assign video_url_mobile = 'https://www.youtube.com/embed/' | append: video_id_mobile | append: '?autoplay=1&controls=0&loop=1&playsinline=1&mute=1' -%}
+        {%- assign video_popup_url_mobile = 'https://www.youtube.com/watch?v=' | append: video_id_mobile -%}
+    {%- endcase -%}
+    {% assign video_popup_url_mobile = _block.slide_video_url_mobile %}
+    <div class="slider__slide-video visible-xs-block">
+      {%- if _block.video_link_url != blank -%}
+        <a target="_blank" class="slider__slide-video-link" href="{{ _block.video_link_url }}"></a>
+      {%- endif -%}
+
+      {%- if _block.slide_video_placeholder_mobile != blank -%}
+        {%- include 'lazyload-image' _image: _block.slide_video_placeholder_mobile, background: true, additional_classes: 'slider__slide-image' -%}
+      {%- else -%}
+        {%- include 'lazyload-image' _iframe: video_popup_url_mobile has_loop: _block.loop_video -%}
+      {%- endif -%}
+
+      {%- if _block.slide_video_popup_play_mobile -%}
+        <a href="{{- video_popup_url_mobile -}}" class="slider__slide-video-btn btn-play js-popup-video button_position_mobile_{{_block.play_button_position_mobile}}_{{block.id}}">
+          <span></span>
+
+          {{- 'sections.hero_slider.play_in_lightbox_mobile' | t -}}
+        </a>
+      {%- endif -%}
+    </div><!-- /.slider__slide-video -->
+  {%- endif -%}
+{%- endif -%}

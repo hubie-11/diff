@@ -1,0 +1,11 @@
+<a href="{{- _product.url -}}" class="product-tile">
+  {%- if _product.images[0] -%}
+    {%- include 'lazyload-image' _image: _product.images[0], background: true, background_parameters: '320x', additional_classes: 'product__image' -%}
+  {%- endif -%}
+
+  <h6>
+    {{- _product.title -}}
+    <br>
+    {{- _product.price | money -}}
+  </h6>
+</a><!-- /.product-tile -->

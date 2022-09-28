@@ -1,0 +1,93 @@
+<div class="article__comments">
+	{%- if article.comments.size > 0 or comment.created_at -%}
+		<h3>
+			{{- 'blogs.comments.title_count' | t: count: article.comments.size -}}
+		</h3>
+
+		{%- paginate article.comments by 10 -%}
+			<div class="comments">
+				{%- for comment in article.comments -%}
+					<div id="comment-{{- comment.id -}}" class="comment">
+						<div class="comment__text">
+							{{- comment.content -}}
+						</div>
+
+						<div class="comment__author">
+							&ndash; {{ comment.author }}
+						</div>
+
+						<div class="comment__meta hidden">
+							{%- assign date_format = 'date_formats.long' | t -%}
+
+							{{- comment.created_at | date: date_format -}}
+						</div>
+					</div><!-- /.comment -->
+				{%- endfor -%}
+			</div><!-- /.comments__listing -->
+
+			{%- include 'pagination' -%}
+		{%- endpaginate -%}
+	{%- endif -%}
+
+	<div id="reply" class="reply">
+		<h3>
+			{{- 'blogs.comments.form_title' | t -}}
+		</h3>
+
+		{%- form "new_comment", article, class: 'reply__form' -%}
+			{%- if form.posted_successfully? -%}
+				<p class="reply__notes">
+					{%- if blog.moderated? -%}
+						{{- 'blogs.comments.success_moderated' | t -}}
+					{%- else -%}
+						{{- 'blogs.comments.success' | t -}}
+					{%- endif -%}
+				</p>
+			{%- endif -%}
+
+			{%- if form.errors -%}
+				<p class="reply__form-subtext error">{{- 'blogs.comments.error' | t -}}</p>
+			{%- endif -%}
+
+			<div class="form__cols">
+				<div class="form__col">
+					<p class="reply__form-author">
+						<div class="form__row">
+							<label class="hidden" for="comment_author">{{- 'blogs.comments.name' | t -}}</label>
+
+							<input type="text" id="comment_author" name="comment[author]" size="40" class="field text" placeholder="{{- 'blogs.comments.name' | t -}}"/>
+						</div><!-- /.form__row -->
+					</p>
+				</div><!-- /.form__col -->
+
+				<div class="form__col">
+					<p class="reply__form-email">
+						<div class="form__row">
+							<label class="hidden" for="comment_email">{{- 'blogs.comments.email' | t -}}</label>
+
+							<input type="text" id="comment_email" name="comment[email]" size="40" class="text field" placeholder="{{- 'blogs.comments.email' | t -}}"/>
+						</div><!-- /.form__row -->
+					</p>
+				</div><!-- /.form__col -->
+			</div><!-- /.form__cols -->
+
+			<p class="reply__form-comment">
+				<div class="form__row">
+					<label class="hidden" for="comment_body">{{- 'blogs.comments.message' | t -}}</label>
+
+					<textarea id="comment_body" name="comment[body]" cols="40" rows="5" class="text field" placeholder="{{- 'blogs.comments.message' | t -}}">{{- form.body -}}</textarea>
+				</div>
+			</p>
+
+			<p class="reply__form-submit">
+				<input type="submit" value="{{- 'blogs.comments.post' | t -}}" class="btn" id="submit" />
+			</p>
+
+			{%- if blog.moderated? -%}
+				<div class="reply__form-notice">
+					{{- 'blogs.comments.moderated' | t -}}
+				</div>
+			{%- endif -%}
+		{%- endform -%}
+	</div><!-- /.comment-respond -->
+</div><!-- /.article__comments -->

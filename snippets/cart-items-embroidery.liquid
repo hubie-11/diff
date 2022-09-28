@@ -1,0 +1,121 @@
+{% if custom != true %}
+    {% if line_item.product.metafields.embroidery_left_ches.enabled and line_item.product.metafields.embroidery_right_cuf.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-sweatshirt-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_left_ches.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_left_ches.button_background }};">{{ line_item.product.metafields.embroidery_left_ches.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_sweatshirt_popup_see_details" class="see_details" data-js-embroidery-sweatshirt-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-sweatshirt-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_hat_left.enabled and line_item.product.metafields.embroidery_hat_right.enabled and line_item.product.metafields.Embroidery.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-hat-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.Embroidery.button_text_color }}; background-color: {{ line_item.product.metafields.Embroidery.button_background }};">{{ line_item.product.metafields.embroidery.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_hat_popup_see_details" class="see_details" data-js-embroidery-hat-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-hat-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_hat_left.enabled and line_item.product.metafields.embroidery_hat_right.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-hat-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_hat_left.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_hat_left.button_background }};">{{ line_item.product.metafields.embroidery_hat_left.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_hat_popup_see_details" class="see_details" data-js-embroidery-hat-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-hat-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_hat_left.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-hat-left-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_hat_left.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_hat_left.button_background }};">{{ line_item.product.metafields.embroidery_hat_left.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_hat_left_popup_see_details" class="see_details" data-js-embroidery-hat-left-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-hat-left-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.Embroidery.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.Embroidery.button_text_color }}; background-color: {{ line_item.product.metafields.Embroidery.button_background }};">{{ line_item.product.metafields.Embroidery.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_popup_see_details" class="see_details" data-js-embroidery-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_hat_right.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-hat-right-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_hat_right.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_hat_right.button_background }};">{{ line_item.product.metafields.embroidery_hat_right.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_hat_right_popup_see_details" class="see_details" data-js-embroidery-hat-right-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-hat-right-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_right_cuf.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-right-cuff-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_right_cuf.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_right_cuf.button_background }};">{{ line_item.product.metafields.embroidery_right_cuf.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_right_cuff_popup_see_details" class="see_details" data-js-embroidery-right-cuff-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-right-cuff-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_left_ches.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-left-chest-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_left_ches.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_left_ches.button_background }};">{{ line_item.product.metafields.embroidery_left_ches.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_left_chest_popup_see_details" class="see_details" data-js-embroidery-left-chest-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-left-chest-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% elsif line_item.product.metafields.embroidery_bag.enabled %}
+        <p>
+            <button
+                    class="c-embroidery-main-cta"
+                    type="button"
+                    aria-label="Show embroidery modal"
+                    data-js-embroidery-bag-popup-toggle
+            >
+                <span style="color: {{ line_item.product.metafields.embroidery_bag.button_text_color }}; background-color: {{ line_item.product.metafields.embroidery_bag.button_background }};">{{ line_item.product.metafields.embroidery_bag.button_cart_title | default:"CUSTOMIZE" }}</span>
+            </button>
+            <a href="#embroidery_bag_popup_see_details" class="see_details" data-js-embroidery-bag-popup-tooltip-toggle>SEE DETAILS</a>
+        </p>
+        {% include 'mini-cart-custom-embroidery-bag-popup', line_item: line_item, line_item_number: forloop.index %}
+    {% endif %}
+{% endif %}
+

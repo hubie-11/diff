@@ -1,0 +1,83 @@
+{%- assign class = class | default: 'paging paging--default' -%}
+{%- assign label = label | default: false -%}
+
+{%- if paginate.pages > 1 -%}
+	{%- unless label_prev -%}
+		{%- assign label_prev = 'general.pagination.previous' | t -%}
+	{%- endunless -%}
+
+	{%- unless label_next -%}
+		{%- assign label_next = 'general.pagination.next' | t -%}
+	{%- endunless -%}
+
+	<div class="{{ class }}">
+		{%- if label != false -%}
+			<span class="paging-label">
+				{{ 'general.pagination.label' | t: current_page: paginate.current_page, pages: paginate.pages }}
+			</span>
+		{%- endif -%}
+
+		{%- if buttons != false -%}
+			{%- if paginate.previous.url -%}
+				<a href="{{ paginate.previous.url }}" class="paging-prev">
+					{{ label_prev }}
+
+					{%- include 'icons', icon: 'arrow-big-left' -%}
+				</a>
+			{%- else -%}
+				<span class="paging-prev">
+					{{ label_prev }}
+
+					{%- include 'icons', icon: 'arrow-big-left' -%}
+				</span>
+			{%- endif -%}
+		{%- endif -%}
+
+		{%- if pager != false -%}
+			<ul>
+				{%- for part in paginate.parts -%}
+					{%- if part.is_link -%}
+						<li>
+							<a href="{{ part.url }}">
+								{{ part.title }}
+							</a>
+						</li>
+					{%- else -%}
+						{%- if part.title == paginate.current_page -%}
+							<li class="current">
+								<span>
+									{{- part.title -}}
+								</span>
+							</li>
+						{%- else -%}
+							<li>
+								<span>
+									{{- part.title -}}
+								</span>
+							</li>
+						{%- endif -%}
+					{%- endif -%}
+				{%- endfor -%}
+			</ul>
+		{%- endif -%}
+
+		{%- if buttons != false -%}
+			{%- if paginate.next.url -%}
+				<a href="{{ paginate.next.url }}" class="paging-next{% if alternate_load %} js-pagination-next{% endif %}">
+					{{- label_next -}}
+
+					{%- include 'icons', icon: 'arrow-big-right' -%}
+				</a>
+			{%- else -%}
+				<span class="paging-next">
+					{{- label_next -}}
+
+					{%- include 'icons', icon: 'arrow-big-right' -%}
+				</span>
+			{%- endif -%}
+		{%- endif -%}
+	</div><!-- /.paging -->
+{%- endif -%}
+{%- assign class = '' -%}
+{%- assign buttons = true -%}
+{%- assign label = false -%}

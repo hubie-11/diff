@@ -1,0 +1,82 @@
+{%- assign loops_count = collection.metafields.marketing_block.grid_position.size | minus: 1 -%}
+
+{%- for i in (0..loops_count) -%}
+  {%- assign has_heading = false -%}
+  {%- assign has_subheading = false -%}
+  {%- assign has_cta_text = false -%}
+  {%- assign has_url = false -%}
+  {%- assign has_image = false -%}
+  {%- assign has_video = false -%}
+  {%- assign grid_position = collection.metafields.marketing_block.grid_position[i] | minus: 1 -%}
+
+  {%- if collection.metafields.marketing_block.heading[i] != nil and collection.metafields.marketing_block.heading[i] != '' -%}
+    {%- assign has_heading = true -%}
+  {%- endif -%}
+
+  {%- if collection.metafields.marketing_block.subheading[i] != nil and collection.metafields.marketing_block.subheading[i] != '' -%}
+    {%- assign has_subheading = true -%}
+  {%- endif -%}
+
+  {%- if collection.metafields.marketing_block.button_text[i] != nil and collection.metafields.marketing_block.button_text[i] != '' -%}
+    {%- assign has_cta_text = true -%}
+  {%- endif -%}
+
+  {%- if collection.metafields.marketing_block.url[i] != nil and collection.metafields.marketing_block.url[i] != '' -%}
+    {%- assign has_url = true -%}
+  {%- endif -%}
+
+  {%- if collection.metafields.marketing_block.image[i][0].src != nil and collection.metafields.marketing_block.image[i][0].src != '' -%}
+    {%- assign has_image = true -%}
+  {%- endif -%}
+
+  {%- if collection.metafields.marketing_block.video[i][0].src != nil and collection.metafields.marketing_block.video[i][0].src != '' -%}
+    {%- assign has_video = true -%}
+  {%- endif -%}
+
+  {%- if
+    has_heading or
+    has_subheading
+  -%}
+    {%- if grid_position == forloop_index -%}
+      <div class="grid__item">
+        <div
+          class="block-cta"
+          style="color: {{ collection.metafields.marketing_block.color[i] | default: '#fff' }}; background-color: {{ collection.metafields.marketing_block.background_color[i] | default: '#000' }};"
+        >
+          {%- if has_image and has_video == false -%}
+            <span class="block__media lazyload" data-bg="{{- collection.metafields.marketing_block.image[i][0].src -}}" role="img" aria-label="{{- collection.metafields.marketing_block.image[i][0].alt -}}"></span>
+          {%- endif -%}
+
+          {%- if has_video -%}
+            <span class="block__media">
+              <video
+                class="lazyload"
+                preload="none"
+                muted
+                autoplay="true"
+                loop
+                playsinline
+              >
+                <source src="{{- collection.metafields.marketing_block.video[i][0].src -}}" type="{{- collection.metafields.marketing_block.video[i][0].mime_type -}}">
+              </video>
+            </span>
+          {%- endif -%}
+
+          <div class="block__content">
+            {%- if has_heading -%}
+              <h4>{{- collection.metafields.marketing_block.heading[i] -}}</h4>
+            {%- endif -%}
+
+            {%- if has_subheading -%}
+              <h5>{{- collection.metafields.marketing_block.subheading[i] -}}</h5>
+            {%- endif -%}
+
+            {%- if has_cta_text and has_url -%}
+              <a href="{{- collection.metafields.marketing_block.url[i] -}}" class="btn">{{- collection.metafields.marketing_block.button_text[i] -}}</a>
+            {%- endif -%}
+          </div><!-- /.block__content -->
+        </div><!-- /.block-cta -->
+      </div><!-- /.grid__item -->
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}

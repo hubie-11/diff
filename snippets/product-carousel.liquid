@@ -1,0 +1,26 @@
+{% if settings.product_carousel_col != blank %}
+    {% assign productCol = collections[settings.product_carousel_col] %}
+
+    {% if productCol.all_products_count > 0 %}
+        <section class="slider-small slider-small--alt" style="padding-top: 50px; padding-bottom: 50px;">
+            <div class="shell shell--fluid">
+                <header class="slider__head">
+                    <h4>You May Be Interested In</h4>
+                    <div class="slider__nav js-slider-small-nav"></div><!-- /.slider__nav -->
+                </header><!-- /.slider__head -->
+                <div
+                    class="slider__slides js-slider-small"
+                    data-destroy-mobile="false"
+                    data-slides-to-show="4"
+                    data-variable-width="false"
+                >
+                {%- for product in productCol.products -%}
+                    <div class="slider__slide">
+                        {%- include 'product-item', current_product: product, show_video: true -%}
+                    </div><!-- /.slider__slide -->
+                {%- endfor -%}
+                </div><!-- /.slider__slides js-slider-small -->
+            </div><!-- /.shell shell-/-fluid -->
+        </section><!-- /.slider-small -->
+    {% endif %}
+{% endif %}

@@ -1,0 +1,233 @@
+{% if product %}
+  {%- assign no_back_in_stock = false -%}
+
+  {%- assign size_guide_kids = false -%}
+  {%- assign size_guide_men = false -%}
+  {%- assign size_guide_women = false -%}
+
+  {% for tag in product.tags %}
+    {% if tag == 'size-chart|men' %}
+      {%- assign size_guide_men = true -%}
+    {% endif %}
+    {% if tag == 'size-chart|women' %}
+      {%- assign size_guide_women = true -%}
+    {% endif %}
+    {% if tag == 'size-chart|kid' %}
+      {%- assign size_guide_kids = true -%}
+    {% endif %}
+  {% endfor %}
+  {% assign _section.zoom_type = 'click' %}
+  {%- if product.tags contains 'no_back_in_stock' -%}
+    {%- assign no_back_in_stock = true -%}
+  {%- endif -%}
+
+  <div class="section-product" id="section-featured-product-article">
+    <div class="shell">
+      <div class="section__cols">
+        {%- if product.images.size > 0 -%}
+          <div class="section__col js-stick-in-parent">
+            {%- include 'product-slider', _product: product, layout: 'slider_thumbs_left', has_thumbs: true, has_counters: true -%}
+          </div><!-- /.section__col -->
+        {%- endif -%}
+
+        <div class="section__col js-stick-in-parent">
+          <div class="section__content">
+            <h2>{{- product.title -}}</h2>
+
+            <h4>{{- product.price | money -}}</h4>
+
+            <div class="section__actions">
+              {% form 'product', product, class: 'form-product js-product-form' %}
+                {%- assign _product = product.selected_or_first_available_variant -%}
+
+                <select name="id" class="hidden">
+                  {% for variant in product.variants %}
+                    {%- include 'price' with variant, echo: false -%}
+
+                    <option
+                       value="{{- variant.id -}}"
+                       data-price="{{- output -}}"
+
+                      {% if _product.id == variant.id %}
+                         selected
+                      {% endif %}
+
+                      {%- for option in variant.options -%}
+                        data-option{{- forloop.index -}}="{{- option | handle -}}"
+                      {%- endfor -%}
+
+                      data-variant-quantity="{{- variant.inventory_quantity -}}"
+                    >
+                      {{- variant.title -}}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                {%- unless product.has_only_default_variant -%}
+                  {%- for product_option in product.options_with_values -%}
+                    {%- assign option_name_handle = product_option.name | handle -%}
+
+                    {%- if option_name_handle == 'color' or option_name_handle == 'colour' -%}
+                      {%- assign group_products_tag = '' -%}
+                      {%- assign color_option_index = product_option.position | minus: 1 -%}
+
+                      {%- for tag in product.tags -%}
+                        {%- if tag contains 'product-group|' -%}
+                          {%- assign group_products_tag = tag | handle -%}
+
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+
+                      <div class="form__row form__swatches">
+                        <p>{{ 'products.product.color_option_label' | t }}: <strong class="js-color-selected">{{- _product.options[color_option_index] -}}</strong></p>
+                        {%- if group_products_tag != '' -%}
+                          <ul
+                              class="swatches js-group-products-swatches hidden"
+                              data-handle="{{- product.handle -}}"
+                              data-url="/collections/all/{{- group_products_tag -}}?view=group-products-swatches"
+                          ></ul>
+                        {%- else -%}
+                          {%- include 'swatches' -%}
+                        {%- endif -%}
+                      </div><!-- /.form__row form__swatches -->
+                    {%- elsif option_name_handle == 'size' -%}
+                      {%- assign size_option_index = product_option.position | minus: 1 -%}
+
+                      <div class="form__row form__sizes">
+                        <p>
+                          {{ 'products.product.size_option_label' | t }}:
+
+                          <strong class="js-size-selected">{{- _product.options[size_option_index] -}}</strong>
+                        </p>
+
+                        {%- include 'product-sizes' -%}
+                      </div><!-- /.form__row form__sizes -->
+                    {%- else -%}
+                      <div class="form__row">
+                        <label for="product-option-{{- option_name_handle -}}">{{- product_option.name -}}:</label>
+
+                        <div class="select">
+                          <select id="product-option-{{- option_name_handle -}}" class="js-product-option" data-option-position="{{- product_option.position -}}">
+                            {%- for value in product_option.values -%}
+                              <option value="{{- value | handle -}}">{{- value -}}</option>
+                            {%- endfor -%}
+                          </select>
+                        </div><!-- /.select -->
+                      </div><!-- /.form__row -->
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endunless -%}
+
+                <div class="form__quantity">
+                  <label for="quantity-{{- product.id -}}">{{- 'products.product.quantity' | t -}}</label>
+
+                  <div class="quantity form__quantity">
+                    <a
+                        href="#quantity-{{- product.id -}}"
+                        class="js-quantity js-quantity-decrease{% unless product.available %} is-disabled{% endunless %}"
+                    >
+                      {%- include 'icons', icon: 'minus' -%}
+                    </a>
+
+                    <input
+                        type="number"
+                        name="updates[]"
+                        class="js-product-quantity{% unless product.available %} is-disabled{% endunless %}"
+                        id="quantity-{{- product.id -}}"
+                        value="1"
+                        min="1"
+                        max="{{- product.inventory_quantity -}}"
+                    >
+
+                    <a
+                        href="#quantity-{{- product.id -}}"
+                        class="js-quantity js-quantity-increase{% unless product.available %} is-disabled{% endunless %}"
+                    >
+                      {%- include 'icons', icon: 'plus' -%}
+                    </a>
+                  </div><!-- /.quantity -->
+                </div><!-- /.form__quantity -->
+
+                <div class="form__buttons" data-real-avl="{{ _product.available }}" data-default="{{- 'products.product.add_to_cart' | t -}}">
+                  {%- assign data_message = 'products.product.select_a_size' | t -%}
+
+                  <span class="form__button__container{% if product.variants.size == 1 %} single{% endif %}{% if product.available %} has-hover-state{% endif %}" data-message="{{ data_message }}">
+                  <button
+                      type="submit"
+                      name="add"
+                      class="btn btn--block btn--inversed form__btn{% if settings.klaviyo_api_key != blank and no_back_in_stock == false and _product.available == false %} form__btn-bis-trigger{% endif %}{% if settings.cart_type == 'drawer' %} js-ajax-add{% endif %}"
+                      data-bis-av="{{ no_back_in_stock }}"
+                      id="AddToCart"
+
+                    {% unless _product.available %}
+                      disabled
+                    {% endunless %}
+
+                    data-text="{{- 'products.product.back_in_stock.back_in_stock_button_text' | t -}}"
+                  >
+                    {{- 'products.product.add_to_cart' | t -}}
+                  </button>
+
+                  {%- if settings.klaviyo_api_key != blank and no_back_in_stock == false -%}
+                    <a class="btn btn--block form__btn js-click js-bis hidden" href="#popup-back-in-stock" data-text="{{- 'products.product.back_in_stock.back_in_stock_button_text' | t -}}">
+                      {%- if _product.available -%}
+                        {{- 'products.product.add_to_cart' | t -}}
+                      {%- else -%}
+                        {%- if no_back_in_stock -%}
+                          {{- 'products.product.sold_out' | t -}}
+                        {%- else -%}
+                          {{- 'products.product.back_in_stock.back_in_stock_button_text' | t -}}
+                        {%- endif -%}
+                      {%- endif -%}
+                    </a>
+                  {%- endif -%}
+                </span>
+
+                  {%- if _section.show_dynamic_checkout_button -%}
+                    <div id="trw-dynmic-checkout-btn" class="form__additional-checkout-buttons1 {% unless _product.available %} hidden {% endunless %}">
+                      {% comment %}
+                      {%- if additional_checkout_buttons -%}
+                         {{- content_for_additional_checkout_buttons -}}
+                       {%- endif -%}
+
+                       {% endcomment %}
+                      {{ form | payment_button }}
+                    </div><!-- /.form__additional-checkout-buttons -->
+                  {%- endif -%}
+                </div><!-- /.form__buttons -->
+              {% endform %}
+            </div><!-- /.section__actions -->
+
+            {%- comment -%} TRW 02/02/2021 START {%- endcomment -%}
+            {%- if product.description != blank -%}
+              <div class="section__description">
+                {{- product.description -}}
+              </div><!-- /.section__description -->
+            {%- endif -%}
+
+            {%- comment -%} TRW 02/02/2021 END {%- endcomment -%}
+            {%- assign product_tabs_size = product.metafields.tabs.title.size | default: 0 -%}
+
+            {%- if product_tabs_size > 0 -%}
+              <div class="section__accordions">
+                <div class="accordions js-accordions">
+                  {%- for i in (1..product_tabs_size) -%}
+                    {%- assign tab_title = product.metafields.tabs.title[forloop.index0] | default: '' -%}
+                    {%- assign tab_content = product.metafields.tabs.content[forloop.index0] | default: '' -%}
+
+                    {%- if tab_title != '' and tab_content != '' -%}
+                      {%- include 'accordion' _title: tab_title, split: 'h6', content: tab_content -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div><!-- /.accordions js-accordions -->
+              </div><!-- /.section__accordions -->
+            {%- endif -%}
+
+          </div><!-- /.section__content -->
+        </div><!-- /.section__col -->
+      </div><!-- /.section__cols -->
+    </div><!-- /.shell -->
+  </div><!-- /.section-featured-product -->
+{%- endif -%}
+

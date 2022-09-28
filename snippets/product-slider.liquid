@@ -1,0 +1,117 @@
+{%- assign slider_thumbs_html = '' -%}
+{%- assign slider_slides_html = '' -%}
+
+{%- assign product_video = _product.metafields.media.video | default: '' -%}
+
+{%- for image in _product.images -%}
+  {%- capture slider_thumbs_html -%}
+    {{- slider_thumbs_html -}}
+
+    <div class="slider__thumbs-slide"{%- if image.alt contains '||color:' -%} data-color="{{- image.alt | split: '||color:' | last | handle -}}"{%- endif -%}>
+      <span class="slider__thumbs-image lazyload" data-bg="{{ image | img_url: '240x' }}" role="img" aria-label="{{- image.alt | split: '||' | first | escape -}}"></span>
+    </div><!-- /.slider__thumbs-slide -->
+  {%- endcapture -%}
+
+  {%- capture slider_slides_html -%}
+    {{- slider_slides_html -}}
+
+    <div class="slider__slide"{%- if image.alt contains '||color:' -%} data-color="{{- image.alt | split: '||color:' | last | handle -}}"{%- endif -%}>
+      {%- if _section.zoom_type == 'hover' -%}
+        <span
+          class="slider__slide-image js-zoom lazyload"
+          data-url="{{- image | img_url: 'master' -}}"
+          data-bg="{{ image | img_url: '1024x' }}"
+          role="img"
+          aria-label="{{- image.alt | split: '||' | first | escape -}}"
+        ></span><!-- /.slider__thumb-image -->
+      {%- elsif _section.zoom_type == 'click' -%}
+        <a
+          href="#product-media-{{- image.id -}}"
+          class="slider__slide-image js-zoom-open lazyload" data-bg="{{ image | img_url: '1024x' }}"
+          role="img"
+          aria-label="{{- image.alt | split: '||' | first | escape -}}"
+        >
+          <span class="zoom-in">
+            {% include 'icons', icon: 'zoom-in' %}
+          </span>
+        </a><!-- /.slider__thumb-image -->
+      {%- else -%}
+        <span
+          class="slider__slide-image lazyload"
+          data-bg="{{ image | img_url: '1024x' }}"
+          role="img"
+          aria-label="{{- image.alt | split: '||' | first | escape -}}"
+        ></span><!-- /.slider__thumb-image -->
+      {%- endif -%}
+    </div><!-- /.slider__slide -->
+  {%- endcapture -%}
+{%- endfor -%}
+
+{%- if product_video != '' -%}
+  {%- assign video_url = '' -%}
+
+  {%- if product_video contains 'vimeo' -%}
+    {%- assign video_id = product_video | split: 'https://vimeo.com/' | last -%}
+    {%- assign video_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?background=1&muted=1&controls=0&autoplay=1&loop=1&autopause=0&quality=1080p' -%}
+  {%- endif -%}
+
+  {%- if product_video contains 'youtube' -%}
+    {%- assign video_id = product_video | split: 'https://www.youtube.com/watch?v=' | last -%}
+    {%- assign video_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?controls=0&autoplay=1&disablekb=1&fs=0&loop=1&playsinline=1&mute=1' -%}
+  {%- endif -%}
+
+  {%- capture slider_thumb_video_html -%}
+    <div class="slider__thumbs-slide">
+      <span class="slider__thumbs-image">
+        {%- include 'lazyload-image' _iframe: video_url -%}
+      </span><!-- /.slider__thumbs-image -->
+    </div><!-- /.slider__thumbs-slide -->
+  {%- endcapture -%}
+
+  {%- capture slider_video_html -%}
+    <div class="slider__slide">
+      <span class="slider__slide-image">
+        {%- include 'lazyload-image' _iframe: video_url -%}
+      </span><!-- /.slider__slide-image -->
+    </div><!-- /.slider__slide -->
+  {%- endcapture -%}
+
+  {%- assign slider_thumbs_html = slider_thumbs_html | append: slider_thumb_video_html -%}
+  {%- assign slider_slides_html = slider_slides_html | append: slider_video_html -%}
+{%- endif -%}
+
+<div class="slider-product slider-product--alt{% if template contains 'product' %} slider-product--primary{% endif %}{% if layout == 'slider_thumbs_bottom' %} slider-product--thumbs-bottom{% elsif layout == 'slider_thumbs_bottom_overlayed' %} slider-product--thumbs-bottom slider-product--thumbs-bottom-overlayed{% elsif layout == 'slider_no_thumbs' %} slider-product--no-thumbs{% endif %} {{ additional_classes }}">
+  {%- if layout == 'slider_thumbs_left' -%}
+    <div class="slider__thumbs">
+      <div class="slider__thumbs-slides js-product-slider-thumbs-vertical">
+        {{- slider_thumbs_html -}}
+      </div><!-- /.slider__thumbs-slides -->
+
+      <div class="slider__nav js-product-slider-nav"></div><!-- /.slider__nav -->
+    </div><!-- /.slider__thumbs -->
+  {%- endif -%}
+
+  <div class="slider__clip">
+    <div class="slider__slides js-product-slider" data-has-thumbs="{{- has_thumbs -}}" data-has-dots-on-mobile="{% if template contains 'product' %}true{%- else -%}false{% endif %}">
+      {{- slider_slides_html -}}
+    </div><!-- /.slider__slides -->
+  </div><!-- /.slider__clip -->
+
+  {%- if layout == 'slider_no_thumbs' -%}
+    <div class="slider__nav js-product-slider-nav"></div><!-- /.slider__nav -->
+  {%- endif -%}
+
+  {%- if layout == 'slider_thumbs_bottom' or layout == 'slider_thumbs_bottom_overlayed' -%}
+    <div class="slider__thumbs">
+      <div class="slider__thumbs-slides js-product-slider-thumbs-horizontal">
+        {{- slider_thumbs_html -}}
+      </div><!-- /.slider__thumbs-slides -->
+
+      <div class="slider__nav js-product-slider-nav"></div><!-- /.slider__nav -->
+    </div><!-- /.slider__thumbs -->
+  {%- endif -%}
+
+  {%- if has_counters -%}
+    <div class="slider__counter js-slider-counter visible-xs-block"></div><!-- /.slider__counter -->
+  {%- endif -%}
+</div><!-- /.slider-product -->

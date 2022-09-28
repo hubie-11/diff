@@ -1,0 +1,19 @@
+{%- if settings.free_shipping_message_toggle and settings.free_shipping_message != blank -%}
+  <div class="bar-shipping" data-jssuccess="{{ settings.free_shipping_success_message }}">
+    {%- assign free_shipping_threshold = settings.free_shipping_threshold | times: 1.0 -%}
+    {% comment %}{%- assign free_shipping_threshold = 75 -%}{% endcomment %}
+
+    {%- assign amount = settings.free_shipping_threshold | times: 100 | minus: cart.total_price | money_without_trailing_zeros | prepend: '<strong>' | append: '</strong>' -%}
+    {%- assign percentage = cart.total_price | divided_by: free_shipping_threshold | round -%}
+
+    {%- if percentage < 100 -%}
+      <p>{{- settings.free_shipping_message | replace: '[amount]', amount -}}</p>
+
+      <span class="progress">
+        <span class="progress__inner" style="width: {{ percentage }}%;"></span>
+      </span>
+    {%- elsif settings.free_shipping_success_message != blank -%}
+      <p>{{- settings.free_shipping_success_message -}}</p>
+    {%- endif -%}
+  </div><!-- /.bar-shipping -->
+{%- endif -%}

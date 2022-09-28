@@ -1,0 +1,26 @@
+
+{% assign line_items = order.line_items %}    
+{% assign tracking_info = 0 %}
+{% assign tracking_info_item = blank %}
+{% for line_item in line_items %}        
+        {% if line_item.fulfillment.item_count == line_items.size %}
+                {% assign tracking_info_item = line_item %}
+            {% break %}
+        {% else %}
+            {% if line_item.fulfillment.tracking_number != blank and line_item.fulfillment.tracking_url != blank %}
+                {% assign tracking_info = tracking_info | plus:1 %}
+            {% endif %}
+        {% endif %}
+{% endfor %}
+{% if tracking_info_item != blank and tracking_info == 0 %}
+    {% if tracking_info_item.fulfillment.tracking_number != blank and tracking_info_item.fulfillment.tracking_url != blank %}
+        <a href="{{-tracking_info_item.fulfillment.tracking_url-}}" target="_blank">{{-tracking_info_item.fulfillment.tracking_number-}}</a>
+    {% else %}
+        -
+    {% endif %}    
+{% elsif tracking_info > 1 %}
+    <a href="{{-order.customer_url-}}#tracking_info">Multiple tracking numbers</a>
+{% else %}
+    -
+{% endif %}
+

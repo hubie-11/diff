@@ -1,0 +1,26 @@
+<div
+  class="section__media-wrapper"
+  {%- if __image.alt contains '||color:' -%}
+    data-color="{{- __image.alt | split: '||color:' | last | handle -}}"
+  {%- endif -%}
+>
+  {%- if _section.zoom_type == 'hover' -%}
+    <div
+      class="section__media js-zoom lazyload"
+      data-url="{{- __image | img_url: 'master' -}}"
+      data-bg="{{ __image | img_url: '900x' }}"
+      role="img"
+      aria-label="{{ __image.alt | split: '||' | first | escape }}"
+    ></div>
+  {%- elsif _section.zoom_type == 'click' -%}
+    <a
+      href="#product-media-{{- __image.id -}}"
+      class="section__media lazyload js-zoom-open"
+      data-bg="{{ __image | img_url: '900x' }}"
+      role="img"
+      aria-label="{{ __image.alt | split: '||' | first | escape }}"
+    ></a>
+  {%- else -%}
+    {%- include 'lazyload-image' _image: __image, background: true, background_parameters: '900x', additional_classes: 'section__media' -%}
+  {%- endif -%}
+</div>

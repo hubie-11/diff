@@ -1,0 +1,54 @@
+{% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+{%- capture sort_options -%}
+	manual|{{ 'collections.sorting.manual' | t }}\
+	best-selling|{{ 'collections.sorting.best_selling' | t }}\
+	title-ascending|{{ 'collections.sorting.title_ascending' | t }}\
+	title-descending|{{ 'collections.sorting.title_descending' | t }}\
+	price-ascending|{{ 'collections.sorting.price_ascending' | t }}\
+	price-descending|{{ 'collections.sorting.price_descending' | t }}\
+	created-descending|{{ 'collections.sorting.created_descending' | t }}\
+	created-ascending|{{ 'collections.sorting.created_ascending' | t }}
+{%- endcapture -%}
+{%- assign sort_options = sort_options | strip_newlines | split: '\' -%}
+
+{%- if is_mobile -%}
+	<div class="filters js-collection-sort visible-xs-block visible-sm-block" id="collection-sort-mobile">
+		<div class="filters__head visible-xs-block visible-sm-block">
+      <a href="#collection-sort-mobile" class="js-click js-trigger-no-scroll">
+        {%- include 'icons', icon: 'close' -%}
+      </a>
+    </div><!-- /.filters__head -->
+
+    <div class="filters__options">
+    	{%- for sortOption in sort_options -%}
+    		{%- assign sort_option_array = sortOption | strip | split: '|' -%}
+
+    		<div class="filters__option{% if current_sort == sort_option_array.first %} filters__option--selected{% endif %}">
+    			<a href="{{- sort_option_array.first -}}" class="js-sort-option">
+            {{- sort_option_array.last -}}
+          </a>
+    		</div><!-- /.filters__option -->
+    	{%- endfor -%}
+    </div><!-- /.filters__options -->
+	</div><!-- /.filters -->
+{%- else -%}
+	<div class="dropdown-alt dropdown-alt--sort dropdown-alt--arrow hidden-xs hidden-sm js-dropdown">
+		<a href="#collection-sort" class="js-click">
+			<span>{{- 'collections.sorting.title' | t -}}</span>
+
+			{%- include 'icons', icon: 'chevron-down' -%}
+		</a>
+
+		<ul class="js-collection-sort1" id="collection-sort">
+			{%- for sortOption in sort_options -%}
+				{%- assign sort_option_array = sortOption | strip | split: '|' -%}
+
+				<li>
+					<a href="{{- sort_option_array.first -}}" class="{% if current_sort == sort_option_array.first %}is-active {% endif %}js-sort-option">
+						{{- sort_option_array.last -}}
+					</a>
+				</li>
+			{%- endfor -%}
+		</ul>
+	</div><!-- /.dropdown-alt -->
+{%- endif -%}
