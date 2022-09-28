@@ -1,0 +1,259 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+
+{%- if _blocks.size > 0 -%}
+	<div class="footer__inner" style="color: {{ _section.footer_color }}; background-color: {{ _section.footer_bg_color }};">
+		<div class="shell">
+			<div class="footer__content">
+				{%- for block in _blocks -%}
+					{%- assign _block = block.settings -%}
+
+					{%- case block.type -%}
+						{%- comment -%} Menu {%- endcomment -%}
+						{%- when 'menu' -%}
+
+						{%- if _block.footer_menu != blank -%}
+							<nav class="footer__nav">
+								<ul>
+									{%- for link in linklists[_block.footer_menu].links -%}
+										{%- assign link_class = '' -%}
+
+										{%- if link.url == '#accessibility' -%}
+											{%- assign link_class = 'js-link-accessibility' -%}
+										{%- endif -%}
+
+										<li>
+											<a href="{{- link.url -}}" class="{{- link_class -}}">{{- link.title -}}</a>
+
+											{%- if link.links.size > 0 -%}
+												<ul class="nav__dropdown">
+													{%- for sublink in link.links -%}
+														{%- assign sublink_class = '' -%}
+
+														{%- if sublink.url == '#accessibility' -%}
+															{%- assign sublink_class = 'js-link-accessibility' -%}
+														{%- endif -%}
+
+														<li>
+															<a href="{{- sublink.url -}}" class="{{- sublink_class -}}">{{- sublink.title -}}</a>
+														</li>
+													{%- endfor -%}
+												</ul>
+											{%- endif -%}
+										</li>
+									{%- endfor -%}
+								</ul>
+							</nav><!-- /.footer__nav -->
+						{%- endif -%}
+
+						{%- comment -%} Text {%- endcomment -%}
+						{%- when 'text' -%}
+
+						{%- if _block.text_content != blank -%}
+							<div class="footer__text">
+								{%- if _block.text_title != blank -%}
+									<h6>{{- _block.text_title -}}</h6>
+								{%- endif -%}
+
+								{{- _block.text_content | newline_to_br -}}
+							</div><!-- /.footer__text -->
+						{%- endif -%}
+
+						{%- comment -%} Socials {%- endcomment -%}
+						{%- when 'socials' -%}
+
+						<div class="footer__socials">
+							{%- if _block.socials_title != blank -%}
+								<h6>{{- _block.socials_title -}}</h6>
+							{%- endif -%}
+
+							{%- include 'socials', class: 'socials' -%}
+						</div><!-- /.footer__socials -->
+
+						{%- comment -%} Custom html {%- endcomment -%}
+						{%- when 'custom-html' -%}
+
+						{%- if _block.custom_html != blank -%}
+							<div class="footer__text">
+								{{- _block.custom_html -}}
+							</div><!-- /.footer__text -->
+						{%- endif -%}
+					{%- endcase -%}
+				{%- endfor -%}
+			</div><!-- /.footer__content -->
+		</div><!-- /.shell -->
+	</div><!-- /.footer__inner -->
+{%- endif -%}
+
+{%- if shop.metafields.footer.trademark_1 or shop.metafields.footer.trademark_2 or shop.metafields.footer.trademark_3 -%}
+  <div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+    <div class="shell">
+    	<div class="trademarks">
+    		<div class="trademark">
+      		<img src="{{ shop.metafields.footer.trademark_1[0].src }}" />
+  			</div>
+     		<div class="trademark">
+      		<img src="{{ shop.metafields.footer.trademark_2[0].src }}" />
+  			</div>
+      	<div class="trademark">
+      		<img src="{{ shop.metafields.footer.trademark_3[0].src }}" />
+  			</div>
+  		</div>
+ 		</div>
+  </div>
+{%- endif -%}
+{%- if page.metafields.footer.copyright -%}
+  <div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+    <div class="shell">
+      <img src="{{ page.metafields.footer.copyright[0].src }}" style="height:16px;" />
+    </div>
+  </div>
+{%- elsif product.metafields.footer.copyright -%}
+  <div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+    <div class="shell">
+      <img src="{{ product.metafields.footer.copyright[0].src }}" style="height:16px;" />
+    </div>
+  </div>
+{%- elsif collection.metafields.footer.copyright -%}
+  <div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+    <div class="shell">
+      <img src="{{ collection.metafields.footer.copyright[0].src }}" style="height:16px;" />
+    </div>
+  </div>
+{%- elsif shop.metafields.footer.copyright -%}
+  <div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+    <div class="shell">
+      <img src="{{ shop.metafields.footer.copyright[0].src }}" style="height:16px;" />
+    </div>
+  </div>
+{%- endif -%}
+{%- unless collection.metafields.footer.copyright or product.metafields.footer.copyright or collection.metafields.footer.copyright or shop.metafields.footer.copyright -%}
+{%- if _section.copyright_text != blank -%}
+	<div class="footer__bar" style="color: {{ _section.footer_bar_color }}; background-color: {{ _section.footer_bar_bg_color }};">
+		<div class="shell">
+			{%- assign current_year = 'now' | date: '%Y' -%}
+
+			{{- _section.copyright_text | replace: '[year]', current_year -}}
+		</div><!-- /.shell -->
+	</div><!-- /.footer__bar -->
+{%- endif -%}
+{%- endunless -%}
+{% schema %}
+{
+	"name": "Footer",
+	"class": "footer",
+	"tag": "footer",
+	"settings": [
+		{
+			"type": "header",
+			"content": "Footer"
+		},
+		{
+			"type": "color",
+			"id": "footer_color",
+			"label": "Color",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "footer_bg_color",
+			"label": "Background color",
+			"default": "#000"
+		},
+		{
+			"type": "header",
+			"content": "Copyright bar"
+		},
+		{
+			"type": "color",
+			"id": "footer_bar_color",
+			"label": "Color",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "footer_bar_bg_color",
+			"label": "Background color",
+			"default": "#333333"
+		},
+		{
+      "type": "richtext",
+      "id": "copyright_text",
+      "label": "Text",
+      "info": "Use [year] to set the current year."
+    }
+	],
+	"max_blocks": 4,
+	"blocks": [
+		{
+			"type": "menu",
+			"name": "Menu",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Footer menu"
+				},
+				{
+					"type": "link_list",
+					"id": "footer_menu",
+					"label": "Footer menu"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"name": "Text",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Text"
+				},
+				{
+					"type": "text",
+					"id": "text_title",
+					"label": "Title"
+				},
+				{
+					"type": "richtext",
+					"id": "text_content",
+					"label": "Content"
+				}
+			]
+		},
+		{
+			"type": "socials",
+			"name": "Socials",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Socials"
+				},
+				{
+					"type": "text",
+					"id": "socials_title",
+					"label": "Title"
+				}
+			]
+		},
+		{
+			"type": "custom-html",
+			"name": "Custom HTML",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "header",
+					"content": "Custom HTML"
+				},
+				{
+					"type": "textarea",
+					"id": "custom_html",
+					"label": "HTML"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

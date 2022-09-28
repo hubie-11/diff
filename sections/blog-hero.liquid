@@ -1,0 +1,54 @@
+
+<header class="section__head">
+    <div class="section__content section__content--center">
+    <div class="shell">
+        <h1 class="page__title">
+            {% if section.settings.title != blank %}
+                {{ section.settings.title }}
+            {% else %}
+                {{- blog.title -}}
+            {% endif %}
+            
+        </h1>
+    </div>
+  </div><!-- /.section__content -->
+</header>
+<style>
+.section__head .page__title{
+    font-size: 95px;
+    color: white;
+    }
+.section__head{
+    background-image: url({{ section.settings.bg_image | img_url: '1600x' }});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
+    min-height: 350px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+{% schema %}
+{
+    "name": "Blog Hero",
+    "settings": [
+       {
+           "type": "header",
+           "content": "Blog Header"
+       },
+      {
+          "type": "image_picker",
+          "id": "bg_image",
+          "label": "Background Image"
+      },
+     {
+         "type": "text",
+         "id": "title",
+         "label": "blog_title"
+     }
+    ]
+}
+{% endschema %}

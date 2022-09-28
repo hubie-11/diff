@@ -1,0 +1,782 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+{%- assign block_styles = '' -%}
+
+{%- if _section.stack_mobile == 'horizontal' -%}
+  {%- assign destroy_on_mobile = false -%}
+{%- elsif _section.stack_mobile == 'vertical' -%}
+  {%- assign destroy_on_mobile = true -%}
+{%- endif -%}
+
+{%- if _blocks.size > 0 -%}
+  <section class="slider-small" id="slider-small-{{ section.id }}">
+    <div class="shell shell--fluid">
+      <header class="slider__head">
+        {%- if _section.heading_text_desktop != blank -%}
+          <h2 class="{%- if _section.heading_text_mobile != blank -%}hidden-xs{%- endif -%}">{{- _section.heading_text_desktop -}}</h2>
+
+          {%- if _section.heading_text_mobile != blank -%}
+            <h2 class="visible-xs-block">{{- _section.heading_text_mobile -}}</h2>
+          {%- endif -%}
+        {%- endif -%}
+
+        <div class="slider__nav js-slider-small-nav"></div><!-- /.slider__nav -->
+      </header><!-- /.slider__head -->
+
+      <div
+        class="slider__slides js-slider-small"
+        data-destroy-mobile="{{- destroy_on_mobile -}}"
+        data-slides-to-show="3"
+        data-variable-width="true"
+      >
+        {%- for block in _blocks -%}
+          {%- assign _block = block.settings -%}
+
+          {%- if _block.image_desktop != blank -%}
+            <div class="slider__slide">
+              <div class="tile-alt" id="tile-alt-{{ block.id }}">
+                {%- if _block.image_url != blank -%}
+                  <a
+                    href="{{- _block.image_url -}}"
+                    class="tile__image lazyload{% if _block.image_mobile != blank %} hidden-xs{% endif %}"
+                    data-bg="{{ _block.image_desktop | img_url: '700x' }}"
+                    role="img"
+                    aria-label="{{ _block.image_desktop.alt | escape }}"
+                  ></a>
+
+                  {% if _block.image_mobile != blank %}
+                    <a
+                      href="{{- _block.image_url -}}"
+                      class="tile__image lazyload visible-xs-block"
+                      data-bg="{{ _block.image_mobile | img_url: '500x' }}"
+                      role="img"
+                      aria-label="{{ _block.image_mobile.alt | escape }}"
+                    ></a>
+                  {% endif %}
+                {%- else -%}
+                  <span
+                    class="tile__image lazyload{% if _block.image_mobile != blank %} hidden-xs{% endif %}"
+                    data-bg="{{ _block.image_desktop | img_url: '700x' }}"
+                    role="img"
+                    aria-label="{{ _block.image_desktop.alt | escape }}"
+                  ></span>
+
+                  {% if _block.image_mobile != blank %}
+                    <span
+                      class="tile__image lazyload visible-xs-block"
+                      data-bg="{{ _block.image_mobile | img_url: '500x' }}"
+                      role="img"
+                      aria-label="{{ _block.image_mobile.alt | escape }}"
+                    ></span>
+                  {% endif %}
+                {%- endif -%}
+
+                {%- if
+                  _block.heading_text_desktop != blank or
+                  _block.subheading_text_desktop != blank or
+                  _block.btn_text_desktop != blank and _block.btn_url != blank
+                -%}
+                  <div class="tile__content">
+                    {%- if _block.heading_text_desktop != blank -%}
+                      <h4 class="{%- if _block.heading_text_mobile != blank -%}hidden-xs{%- endif -%}">{{- _block.heading_text_desktop -}}</h4>
+
+                      {%- if _block.heading_text_mobile != blank -%}
+                        <h4 class="visible-xs-block">{{- _block.heading_text_mobile -}}</h4>
+                      {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if _block.subheading_text_desktop != blank -%}
+                      <h6 class="{%- if _block.subheading_text_mobile != blank -%}hidden-xs{%- endif -%}">{{- _block.subheading_text_desktop -}}</h6>
+
+                      {%- if _block.subheading_text_mobile != blank -%}
+                        <h6 class="visible-xs-block">{{- _block.subheading_text_mobile -}}</h6>
+                      {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if _block.btn_text_desktop != blank and _block.btn_url != blank -%}
+                      <div class="tile__actions">
+                        <a href="{{- _block.btn_url -}}" class="link-more{% if _block.btn_text_mobile != blank %} hidden-xs{% endif %}">{{- _block.btn_text_desktop -}}</a>
+
+                        {% if _block.btn_text_mobile != blank %}
+                            <a href="{{- _block.btn_url -}}" class="link-more visible-xs-inline-block">{{- _block.btn_text_mobile -}}</a>
+                        {% endif %}
+                      </div><!-- /.tile__actions -->
+                    {%- endif -%}
+                  </div><!-- /.tile__content -->
+                {%- endif -%}
+              </div><!-- /.tile-alt -->
+            </div><!-- /.slider__slide -->
+          {%- endif -%}
+
+          {%- capture block_styles -%}
+            {{- block_styles -}}
+
+            <style type="text/css" media="screen" id="block-{{ block.id }}">
+              .tile-alt#tile-alt-{{ block.id }} .tile__image:after {
+                background-color: {{ _block.image_overlay_color_desktop }};
+                opacity: {{ _block.image_overlay_opacity_desktop | times: 0.01 }};
+              }
+
+              .tile-alt#tile-alt-{{ block.id }} h4 {
+                font-size: {{ _block.heading_size_desktop }}px;
+                text-align: {{ _block.heading_align_desktop }};
+                color: {{ _block.heading_color_desktop }};
+                padding-top: {{ _block.heading_space_above_desktop }}px;
+                padding-bottom: {{ _block.heading_space_below_desktop }}px;
+              }
+
+              .tile-alt#tile-alt-{{ block.id }} h6 {
+                font-size: {{ _block.subheading_size_desktop }}px;
+                text-align: {{ _block.subheading_align_desktop }};
+                color: {{ _block.subheading_color_desktop }};
+                padding-top: {{ _block.subheading_space_above_desktop }}px;
+                padding-bottom: {{ _block.subheading_space_below_desktop }}px;
+              }
+
+              .tile-alt#tile-alt-{{ block.id }} .tile__actions {
+                text-align: {{ _block.btn_align_desktop }};
+                padding-top: {{ _block.btn_space_above_desktop }}px;
+                padding-bottom: {{ _block.btn_space_below_desktop }}px;
+              }
+
+              .tile-alt#tile-alt-{{ block.id }} .tile__actions a {
+                font-size: {{ _block.btn_size_desktop }}px;
+                color: {{ _block.btn_color_desktop }};
+              }
+
+              @media (max-width: 767px) {
+                .tile-alt#tile-alt-{{ block.id }} .tile__image:after {
+                  background-color: {{ _block.image_overlay_color_mobile }};
+                  opacity: {{ _block.image_overlay_opacity_mobile | times: 0.01 }};
+                }
+
+                .tile-alt#tile-alt-{{ block.id }} h4 {
+                  font-size: {{ _block.heading_size_mobile }}px;
+                  text-align: {{ _block.heading_align_mobile }};
+                  color: {{ _block.heading_color_mobile }};
+                  padding-top: {{ _block.heading_space_above_mobile }}px;
+                  padding-bottom: {{ _block.heading_space_below_mobile }}px;
+                }
+
+                .tile-alt#tile-alt-{{ block.id }} h6 {
+                  font-size: {{ _block.subheading_size_mobile }}px;
+                  text-align: {{ _block.subheading_align_mobile }};
+                  color: {{ _block.subheading_color_mobile }};
+                  padding-top: {{ _block.subheading_space_above_mobile }}px;
+                  padding-bottom: {{ _block.subheading_space_below_mobile }}px;
+                }
+
+                .tile-alt#tile-alt-{{ block.id }} .tile__actions {
+                  text-align: {{ _block.btn_align_mobile }};
+                  padding-top: {{ _block.btn_space_above_mobile }}px;
+                  padding-bottom: {{ _block.btn_space_below_mobile }}px;
+                }
+
+                .tile-alt#tile-alt-{{ block.id }} .tile__actions a {
+                  font-size: {{ _block.btn_size_mobile }}px;
+                  color: {{ _block.btn_color_mobile }};
+                }
+              }
+            </style>
+          {%- endcapture -%}
+        {%- endfor -%}
+      </div><!-- /.slider__slides -->
+    </div><!-- /.shell -->
+
+  </section><!-- /.slider-small -->
+{%- endif -%}
+
+<style type="text/css" media="screen" id="section-{{ section.id }}">
+  .slider-small#slider-small-{{ section.id }} {
+    background-color: {{ _section.background_color }};
+  }
+
+  .slider-small#slider-small-{{ section.id }} h2 {
+    font-size: {{ _section.heading_size_desktop }}px;
+    color: {{ _section.heading_color_desktop }};
+  }
+
+  @media (max-width: 767px) {
+    .slider-small#slider-small-{{ section.id }} h2 {
+      font-size: {{ _section.heading_size_mobile }}px;
+      color: {{ _section.heading_color_mobile }};
+    }
+  }
+</style>
+
+{{- block_styles -}}
+
+{% schema %}
+{
+  "name": "Small image slider",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "transparent"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "stack_mobile",
+      "label": "Stack blocks on mobile",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text_desktop",
+      "label": "Text"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "heading_color_desktop",
+      "label": "Color",
+      "default": "#000"
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text_mobile",
+      "label": "Text"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "heading_color_mobile",
+      "label": "Color",
+      "default": "#000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_url",
+          "label": "URL"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Image",
+          "info": "Recommended image size: 1024x1362 px"
+        },
+        {
+          "type": "color",
+          "id": "image_overlay_color_desktop",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Overlay opacity",
+          "default": 25
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image",
+          "info": "Recommended image size: 600x798 px"
+        },
+        {
+          "type": "color",
+          "id": "image_overlay_color_mobile",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Overlay opacity",
+          "default": 25
+        },
+        {
+          "type": "header",
+          "content": "Heading"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "richtext",
+          "id": "heading_text_desktop",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "heading_color_desktop",
+          "label": "Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "heading_size_desktop",
+          "min": 10,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 30
+        },
+        {
+          "type": "select",
+          "id": "heading_align_desktop",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "heading_space_above_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "heading_space_below_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing below",
+          "default": 0
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "richtext",
+          "id": "heading_text_mobile",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "heading_color_mobile",
+          "label": "Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "heading_size_mobile",
+          "min": 10,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 22
+        },
+        {
+          "type": "select",
+          "id": "heading_align_mobile",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "heading_space_above_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "heading_space_below_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing below",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Subheading"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text_desktop",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color_desktop",
+          "label": "Color",
+          "default": "#333"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size_desktop",
+          "min": 10,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "subheading_align_desktop",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "subheading_space_above_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "subheading_space_below_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing below",
+          "default": 0
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text_mobile",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color_mobile",
+          "label": "Color",
+          "default": "#333"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size_mobile",
+          "min": 10,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "subheading_align_mobile",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "subheading_space_above_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "subheading_space_below_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Spacing below",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "URL"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "text",
+          "id": "btn_text_desktop",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "btn_color_desktop",
+          "label": "Color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "btn_align_desktop",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "btn_size_desktop",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "btn_space_above_desktop",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Space above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "btn_space_below_desktop",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Space below",
+          "default": 0
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "text",
+          "id": "btn_text_mobile",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "btn_color_mobile",
+          "label": "Color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "btn_align_mobile",
+          "label": "Horizontal align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "btn_size_mobile",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "btn_space_above_mobile",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Space above",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "btn_space_below_mobile",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Space below",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Small image slider",
+      "category": "Sliders"
+    }
+  ]
+}
+{% endschema %}

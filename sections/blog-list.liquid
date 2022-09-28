@@ -1,0 +1,48 @@
+<div class="shell blog__listing">
+    <div class="blog__options-row">
+        <div class="blog__search">
+            <form>
+                <input  type="hidden" name="type" value="article" />
+                <input id="BlogSearchInput" autocomplete="off" placeholder="Search" type="text" name="q" />
+                
+            </form>
+        </div>
+
+        <div class="blog__sort">
+            <select id="sort-by">
+                <option value="hide">Sort By</option>  
+                <option value="order_1">Newest to oldest</option>  
+                <option value="order_2">Oldest to newest</option>
+                <!-- <option value="office_2">Alphabetically</option> -->
+            </select>
+        </div>
+       
+    </div>
+
+    {%- paginate blog.articles by 8 -%}
+        <div class="blog__inner" id="AjaxinateContainer">
+            {%- for _article in blog.articles -%}
+                {% include 'article-grid-item' with _article %}
+            {%- endfor -%}
+        </div><!-- /.blog__inner -->
+       
+    {%- endpaginate -%}
+
+
+</div><!-- /.blog__listing -->
+<script>
+
+
+
+</script>
+{% schema %}
+{
+    "name": "Blog Grid",
+    "settings": [
+       {
+           "type": "header",
+           "content": "Blog"
+       }
+    ]
+}
+{% endschema %}

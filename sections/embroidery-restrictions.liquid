@@ -1,0 +1,42 @@
+{%- assign _section = section.settings -%}
+{%- assign section_words = _section.words | newline_to_br | split: '<br />' -%}
+{%- assign section_message = _section.message -%}
+{%- assign section_emoji_message = _section.emoji_message -%}
+
+<script type="text/javascript">
+  var restrictions = [];
+  var restrictionMessage = {{ section_message | json }}
+  var emojisMessage = {{ section_emoji_message | json }}
+</script>
+
+{%- for word in section_words -%}
+  {%- assign word_h = word | handle -%}
+
+  <script type="text/javascript">
+    restrictions.push({{word_h | json }})
+  </script>
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Embroidery restrictions",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "words",
+      "label": "Restricted words",
+      "info": "Type each word you want to restrict on a new line."
+    },
+    {
+      "type": "textarea",
+      "id": "message",
+      "label": "Restricted words message"
+    },
+    {
+      "type": "textarea",
+      "id": "emoji_message",
+      "label": "Emojis message"
+    }
+  ]
+}
+{% endschema %}

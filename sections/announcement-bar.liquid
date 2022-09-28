@@ -1,0 +1,160 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+{%- assign is_visible = false -%}
+{%- assign is_visible_mobile_only = false -%}
+{%- assign hide_on_scroll = false -%}
+{%- assign has_slider = false -%}
+{%- assign slides_interval = _section.slides_interval -%}
+{%- assign slides_transition = _section.slides_transition -%}
+
+{%- if _section.visible_desktop or _section.visible_mobile -%}
+  {%- assign is_visible = true -%}
+{%- endif -%}
+
+{%- if _section.visible_desktop == false and _section.visible_mobile == true -%}
+  {%- assign is_visible_mobile_only = true -%}
+{%- endif -%}
+
+{%- if _section.hide_on_scroll -%}
+  {%- assign hide_on_scroll = true -%}
+{%- endif -%}
+
+{%- if _blocks.size > 0 and _blocks.size > 1 -%}
+  {%- assign has_slider = true -%}
+{%- endif -%}
+
+{%- if is_visible -%}
+  <div class="bar-announcement{% if is_visible_mobile_only %} visible-xs-block{% endif %}{% if hide_on_scroll %} js-hide-on-scroll{% endif %}" style="background-color: {{ _section.background_color }}; color: {{ _section.text_color }};">
+    <div class="bar__inner">
+      {%- if customer -%}
+        <div class="bar__message hidden-xs">
+          <span>{{- 'announcement_bar.greeting_text' | t: username: customer.first_name -}}</span>
+        </div><!-- /.bar__message -->
+      {%- endif -%}
+
+      {%- if _blocks.size > 0 -%}
+        <div class="bar__content js-announcement-bar-slider" data-interval="{{- slides_interval -}}" data-transition="{{- slides_transition -}}">
+          {%- for block in _blocks -%}
+            {%- assign _block = block.settings -%}
+
+            {%- if is_visible_mobile_only -%}
+              {%- if _block.content_mobile != blank -%}
+                <div class="bar__item">
+                  {{- _block.content_mobile -}}
+                </div><!-- /.bar__item -->
+              {%- endif -%}
+            {%- else -%}
+              {%- if _block.title != blank -%}
+                <div class="bar__item">
+                  {%- if _block.content_mobile != blank -%}
+                    {{- _block.title | replace: '<p>', '<p class="hidden-xs">' -}}
+                    {{- _block.content_mobile | replace: '<p>', '<p class="visible-xs-block">' -}}
+                  {%- else -%}
+                    {{- _block.title -}}
+                  {%- endif -%}
+                </div><!-- /.bar__item -->
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div><!-- /.bar__content -->
+      {%- endif -%}
+    </div><!-- /.bar__inner -->
+  </div><!-- /.bar-announcement -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Visiblity"
+    },
+    {
+      "type": "checkbox",
+      "id": "visible_desktop",
+      "label": "Show/Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "visible_mobile",
+      "label": "Show/Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_scroll",
+      "label": "Hide on scroll",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Slides settings"
+    },
+    {
+      "type": "range",
+      "id": "slides_interval",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "label": "Slides interval",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "slides_transition",
+      "label": "Slides transition effect",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        }
+      ],
+      "default": "fade"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "content_mobile",
+          "label": "Text - mobile"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

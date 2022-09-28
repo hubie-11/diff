@@ -1,0 +1,63 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+
+{%- if _blocks.size > 0 -%}
+  <style type="text/css" id="color-swatches-styles">
+    {%- for block in _blocks -%}
+      {%- assign _block = block.settings -%}
+
+      {% if _block.title != blank %}
+      .swatch__color-{{ _block.title | handle }} {
+          color: {{ _block.color }} !important;
+          background-color: {{ _block.color }} !important;
+
+          {% if _block.image != blank %}
+            background-image: url({{- _block.image | img_url: '60x' -}}); 
+          {% endif %}
+        }
+      {% endif %}
+    {%- endfor -%}
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Swatches colors",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color swatches management"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each block defines a seperate color swatch, with option for color and image."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "swatch",
+      "name": "Swatch",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "info": "The exact name of the variant color name, to associate to the swatch"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "#fff"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "It has higher priority over the color"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

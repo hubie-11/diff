@@ -1,0 +1,590 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+{%- assign blocks_styles = '' -%}
+
+{%- if _blocks.size > 0 -%}
+  <div class="section-halfs" style="background-color: {{ _section.background_color }}">
+    <div class="section__cols{% if _section.blocks_stack_mobile == 'horizontal' %} section__cols--slider js-slider-tiles{% endif %}">
+      {%- for block in _blocks -%}
+        {%- assign _block = block.settings -%}
+        {%- assign _product = false -%}
+
+        {%- if _block.product_item != blank -%}
+          {%- assign _product = all_products[_block.product_item] -%}
+        {%- endif -%}
+
+        {%- if _block.image_desktop != blank or _product != false -%}
+          <div class="section__col">
+            <div class="tile{% if _block.whitespace %} tile--inset{% endif %}{% if _blocks.size == 1 %} tile--landscape{% endif %}" id="block-{{- block.id -}}">
+              {%- assign block_image_url = _block.image_url -%}
+              {%- assign block_image = _block.image_desktop -%}
+              {%- assign block_image_mobile = _block.image_mobile -%}
+              {%- assign block_title = _block.heading_text_desktop -%}
+              {%- assign block_title_mobile = _block.heading_text_mobile -%}
+              {%- assign block_subtitle = _block.subheading_text_desktop -%}
+              {%- assign block_subtitle_mobile = _block.subheading_text_mobile -%}
+              {%- assign block_cta_text = _block.cta_text_desktop -%}
+              {%- assign block_cta_text_mobile = _block.cta_text_mobile -%}
+              {%- assign block_cta_url = _block.cta_url -%}
+
+              {%- if _product != false -%}
+                {%- assign block_image_url = _product.url -%}
+                {%- assign block_image = _product.images[0] -%}
+                {%- assign block_image_mobile = _product.images[0] -%}
+                {%- assign block_title = _product.title -%}
+                {%- assign block_title_mobile = _product.title -%}
+                {%- assign block_subtitle = _product.price | money -%}
+                {%- assign block_subtitle_mobile = _product.price | money -%}
+                {%- assign block_cta_url = _product.url -%}
+              {%- endif -%}
+
+              {%- if _block.image_url != blank or _product != false -%}
+                {%- if _block.image_mobile != blank -%}
+                  <a href="{{- block_image_url -}}" class="tile__image lazyload hidden-xs" data-bg="{{ block_image | img_url: 'master' }}" role="img" aria-label="{{ block_image.alt | escape }}"></a>
+
+                  <a href="{{- block_image_url -}}" class="tile__image lazyload visible-xs-block" data-bg="{{ block_image_mobile | img_url: '700x' }}" role="img" aria-label="{{ block_image_mobile.alt | escape }}"></a>
+                {%- else -%}
+                  <a href="{{- block_image_url -}}" class="tile__image lazyload" data-bg="{{ block_image | img_url: 'master' }}" role="img" aria-label="{{ block_image.alt | escape }}"></a>
+                {%- endif -%}
+              {%- else -%}
+                {%- if _block.image_mobile != blank -%}
+                  <span class="tile__image lazyload hidden-xs" data-bg="{{ block_image | img_url: 'master' }}" role="img" aria-label="{{ block_image.alt | escape }}"></span>
+
+                  <span class="tile__image lazyload visible-xs-block" data-bg="{{ block_image_mobile | img_url: '700x' }}" role="img" aria-label="{{ block_image_mobile.alt | escape }}"></span>
+                {%- else -%}
+                  <span class="tile__image lazyload" data-bg="{{ block_image | img_url: 'master' }}" role="img" aria-label="{{ block_image.alt | escape }}"></span>
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if
+                block_title != blank or
+                block_subtitle != blank or
+                block_cta_text != blank and block_cta_url != blank
+              -%}
+                <div class="tile__content">
+                  {%- if block_title != blank -%}
+                    {%- if block_title_mobile != blank -%}
+                      <h4 class="hidden-xs">{{- block_title | remove: '<p>' | remove: '</p>' -}}</h4>
+
+                      <h4 class="visible-xs-block">{{- block_title_mobile | remove: '<p>' | remove: '</p>' -}}</h4>
+                    {%- else -%}
+                      <h4>{{- block_title | remove: '<p>' | remove: '</p>' -}}</h4>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  {%- if block_subtitle != blank -%}
+                    {%- if block_subtitle_mobile != blank -%}
+                      <h6 class="hidden-xs">{{- block_subtitle | remove: '<p>' | remove: '</p>' -}}</h6>
+
+                      <h6 class="visible-xs-block">{{- block_subtitle_mobile | remove: '<p>' | remove: '</p>' -}}</h6>
+                    {%- else -%}
+                      <h6>{{- block_subtitle | remove: '<p>' | remove: '</p>' -}}</h6>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  {%- if block_cta_text != blank and _block.cta_url != blank -%}
+                    <div class="tile__actions">
+                      {%- if block_cta_text_mobile != blank -%}
+                        <a class="link-more hidden-xs" href="{{- block_cta_url -}}">{{- block_cta_text -}}</a>
+                        <a class="link-more visible-xs-inline-block" href="{{- block_cta_url -}}">{{- block_cta_text_mobile -}}</a>
+                      {%- else -%}
+                        <a href="{{- block_cta_url -}}" class="link-more">{{- block_cta_text -}}</a>
+                      {%- endif -%}
+                    </div><!-- /.tile__actions -->
+                  {%- endif -%}
+                </div><!-- /.tile__content -->
+              {%- endif -%}
+            </div><!-- /.tile -->
+          </div><!-- /.section__col -->
+        {%- endif -%}
+
+        {%- capture blocks_styles -%}
+          {{- blocks_styles -}}
+
+          <style type="text/css" media="screen" id="stylesheet-block-{{- block.id -}}">
+            .tile#block-{{ block.id }} .tile__image {
+              margin-bottom: {{ _block.image_spacing_desktop }}px;
+            }
+
+            .tile#block-{{ block.id }} .tile__image:last-child {
+              margin-bottom: 0;
+            }
+
+            .tile#block-{{ block.id }} .tile__image:after {
+              background-color: {{ _block.image_overlay_color_desktop }};
+              opacity: {{ _block.image_overlay_desktop | times: 0.01  }};
+            }
+
+            .tile#block-{{ block.id }} h4 {
+              font-size: {{ _block.heading_size_desktop }}px;
+              text-align: {{ _block.heading_align_desktop }};
+              color: {{ _block.heading_color_desktop }};
+            }
+
+            .tile#block-{{ block.id }} h6 {
+              font-size: {{ _block.subheading_size_desktop }}px;
+              text-align: {{ _block.subheading_align_desktop }};
+              color: {{ _block.subheading_color_desktop }};
+            }
+
+            .tile#block-{{ block.id }} .tile__content a {
+              font-size: {{ _block.cta_size_desktop }}px;
+              color: {{ _block.cta_color_desktop }};
+            }
+
+            .tile#block-{{ block.id }} .tile__actions {
+              text-align: {{ _block.cta_align_desktop }};
+            }
+
+            /* Mobile */
+            @media (max-width: 767px) {
+              .tile#block-{{ block.id }} .tile__image {
+                margin-bottom: {{ _block.image_spacing_mobile }}px;
+              }
+
+              .tile#block-{{ block.id }} .tile__image:last-child {
+                margin-bottom: 0;
+              }
+
+              .tile#block-{{ block.id }} .tile__image:after {
+                background-color: {{ _block.image_overlay_color_mobile }};
+                opacity: {{ _block.image_overlay_mobile | times: 0.01  }};
+              }
+
+              .tile#block-{{ block.id }} h4 {
+                font-size: {{ _block.heading_size_mobile }}px;
+                text-align: {{ _block.heading_align_mobile }};
+                color: {{ _block.heading_color_mobile }};
+              }
+
+              .tile#block-{{ block.id }} h6 {
+                font-size: {{ _block.subheading_size_mobile }}px;
+                text-align: {{ _block.subheading_align_mobile }};
+                color: {{ _block.subheading_color_mobile }};
+              }
+
+              .tile#block-{{ block.id }} .tile__content a {
+                font-size: {{ _block.cta_size_mobile }}px;
+                color: {{ _block.cta_color_mobile }};
+              }
+
+              .tile#block-{{ block.id }} .tile__actions {
+                text-align: {{ _block.cta_align_mobile }};
+              }
+            }
+          </style>
+        {%- endcapture -%}
+      {%- endfor -%}
+    </div><!-- /.section__cols -->
+  </div><!-- /.section-halfs -->
+{%- endif -%}
+
+{{- blocks_styles -}}
+
+{% schema %}
+{
+  "name": "Two Up - Content",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "transparent"
+    },
+    {
+      "type": "select",
+      "id": "blocks_stack_mobile",
+      "label": "Blocks stacking on mobile",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "vertical"
+    }
+  ],
+  "max_blocks": 2,
+  "blocks": [
+    {
+      "type": "image-content",
+      "name": "Image with content",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "whitespace",
+          "label": "Add whitespace",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_url",
+          "label": "Image URL"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Image"
+        },
+        {
+          "type": "color",
+          "id": "image_overlay_color_desktop",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Overlay",
+          "default": 25
+        },
+        {
+          "type": "range",
+          "id": "image_spacing_desktop",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Image spacing",
+          "default": 50
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image"
+        },
+        {
+          "type": "color",
+          "id": "image_overlay_color_mobile",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Overlay",
+          "default": 25
+        },
+        {
+          "type": "range",
+          "id": "image_spacing_mobile",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Image spacing",
+          "default": 40
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "paragraph",
+          "content": "Desktop"
+        },
+        {
+          "type": "richtext",
+          "id": "heading_text_desktop",
+          "label": "Heading text"
+        },
+        {
+          "type": "color",
+          "id": "heading_color_desktop",
+          "label": "Heading color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "heading_size_desktop",
+          "min": 16,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Heading size",
+          "default": 30
+        },
+        {
+          "type": "select",
+          "id": "heading_align_desktop",
+          "label": "Heading align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text_desktop",
+          "label": "Subheading text"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color_desktop",
+          "label": "Subheading color",
+          "default": "#333"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size_desktop",
+          "min": 12,
+          "max": 36,
+          "step": 1,
+          "unit": "px",
+          "label": "Subheading size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "subheading_align_desktop",
+          "label": "Subheading align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "cta_text_desktop",
+          "label": "Link text"
+        },
+        {
+          "type": "url",
+          "id": "cta_url",
+          "label": "Link URL"
+        },
+        {
+          "type": "color",
+          "id": "cta_color_desktop",
+          "label": "Link color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "cta_size_desktop",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Link size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "cta_align_desktop",
+          "label": "Link align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "paragraph",
+          "content": "Mobile"
+        },
+        {
+          "type": "richtext",
+          "id": "heading_text_mobile",
+          "label": "Heading text"
+        },
+        {
+          "type": "color",
+          "id": "heading_color_mobile",
+          "label": "Heading color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "heading_size_mobile",
+          "min": 16,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Heading size",
+          "default": 22
+        },
+        {
+          "type": "select",
+          "id": "heading_align_mobile",
+          "label": "Heading align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text_mobile",
+          "label": "Subheading text"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color_mobile",
+          "label": "Subheading color",
+          "default": "#333"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size_mobile",
+          "min": 12,
+          "max": 36,
+          "step": 1,
+          "unit": "px",
+          "label": "Subheading size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "subheading_align_mobile",
+          "label": "Subheading align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "cta_text_mobile",
+          "label": "Link text"
+        },
+        {
+          "type": "color",
+          "id": "cta_color_mobile",
+          "label": "Link color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "cta_size_mobile",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Link size",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "cta_align_mobile",
+          "label": "Link align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "header",
+          "content": "Product"
+        },
+        {
+          "type": "product",
+          "id": "product_item",
+          "label": "Product",
+          "info": "Overwrites image/text chosen above"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Two Up - Content",
+      "category": "Image with content"
+    }
+  ]
+}
+{% endschema %}

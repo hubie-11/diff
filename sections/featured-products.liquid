@@ -1,0 +1,470 @@
+{%- assign _section = section.settings -%}
+{%- assign _blocks = section.blocks -%}
+{%- assign blocks_styles = '' -%}
+
+{%- if _blocks.size > 0 -%}
+  <section class="section-featured-products{% if _section.reverse %} section-featured-products--reverse{% endif %}" id="section-featured-products-{{ section.id }}">
+    <div class="shell">
+      <div class="section__inner">
+        {%- if _section.image_desktop != blank -%}
+          <aside class="section__aside">
+            {%- if _section.image_url != blank -%}
+              {%- if _section.image_mobile != blank -%}
+                <a href="{{- _section.image_url -}}" class="section__image lazyload hidden-xs" data-bg="{{ _section.image_desktop | img_url: '900x' }}" role="img" aria-label="{{ _section.image_desktop.alt | escape }}"></a>
+
+                <a href="{{- _section.image_url -}}" class="section__image lazyload visible-xs-block" data-bg="{{ _section.image_mobile | img_url: '500x' }}" role="img" aria-label="{{ _section.image_mobile.alt | escape }}"></a>
+              {%- else -%}
+                <a href="{{- _section.image_url -}}" class="section__image lazyload" data-bg="{{ _section.image_desktop | img_url: '900x' }}" role="img" aria-label="{{ _section.image_desktop.alt | escape }}"></a>
+              {%- endif -%}
+            {%- else -%}
+              {%- if _section.image_mobile != blank -%}
+                <span class="section__image lazyload hidden-xs" data-bg="{{ _section.image_desktop | img_url: '900x' }}" role="img" aria-label="{{ _section.image_desktop.alt | escape }}"></span>
+
+                <span class="section__image lazyload visible-xs-block" data-bg="{{ _section.image_mobile | img_url: '500x' }}" role="img" aria-label="{{ _section.image_mobile.alt | escape }}"></span>
+              {%- else -%}
+                <span class="section__image lazyload" data-bg="{{ _section.image_desktop | img_url: '900x' }}" role="img" aria-label="{{ _section.image_desktop.alt | escape }}"></span>
+              {%- endif -%}
+            {%- endif -%}
+          </aside><!-- /.section__aside -->
+        {%- endif -%}
+
+        <div class="section__content">
+          <div class="product-items">
+            {%- for block in _blocks -%}
+              {%- assign _block = block.settings -%}
+              {%- assign block_id = 'block-' | append: block.id -%}
+
+              {%- if _block.product_item != blank -%}
+                {%- assign _product = all_products[_block.product_item] -%}
+                {%- assign _title = '' -%}
+                {%- assign _title_mobile = '' -%}
+                {%- assign _subtitle = '' -%}
+                {%- assign _subtitle_mobile = '' -%}
+                {%- assign _btn_text = '' -%}
+                {%- assign _btn_text_mobile = '' -%}
+
+                {%- if _block.product_title != blank -%}
+                  {%- assign _title = _block.product_title -%}
+                {%- endif -%}
+
+                {%- if _block.product_title_mobile != blank -%}
+                  {%- assign _title_mobile = _block.product_title_mobile -%}
+                {%- endif -%}
+
+                {%- if _block.product_subtitle != blank -%}
+                  {%- assign _subtitle = _block.product_subtitle -%}
+                {%- endif -%}
+
+                {%- if _block.product_subtitle_mobile != blank -%}
+                  {%- assign _subtitle_mobile = _block.product_subtitle_mobile -%}
+                {%- endif -%}
+
+                {%- if _block.product_btn_text != blank -%}
+                  {%- assign _btn_text = _block.product_btn_text -%}
+                {%- endif -%}
+
+                {%- if _block.product_btn_text_mobile != blank -%}
+                  {%- assign _btn_text_mobile = _block.product_btn_text_mobile -%}
+                {%- endif -%}
+
+                {%- include 'product-item-small', __product: _product, class: 'product-items__item section__item', id: block_id, _title: _title, _title_mobile: _title_mobile, _subtitle: _subtitle, _subtitle_mobile: _subtitle_mobile, _btn_text: _btn_text, _btn_text_mobile: _btn_text_mobile -%}
+              {%- endif -%}
+
+              {%- capture blocks_styles -%}
+                {{- blocks_styles -}}
+
+                <style type="text/css" media="screen" id="stylesheet-block-{{- block.id -}}">
+                  .product-item-small#block-{{ block.id }} h4 {
+                    color: {{ _block.product_title_color }};
+                    font-size: {{ _block.product_title_size }}px;
+                    text-align: {{ _block.product_title_align }};
+                  }
+
+                  .product-item-small#block-{{ block.id }} p {
+                    color: {{ _block.product_subtitle_color }};
+                    font-size: {{ _block.product_subtitle_size }}px;
+                    text-align: {{ _block.product_subtitle_align }};
+                  }
+
+                  .product-item-small#block-{{ block.id }} button {
+                    color: {{ _block.product_btn_color }};
+                    background-color: {{ _block.product_bg_btn_color }};
+                  }
+
+                  @media (max-width: 767px) {
+                    .product-item-small#block-{{ block.id }} h4 {
+                      color: {{ _block.product_title_color_mobile }};
+                      font-size: {{ _block.product_title_size_mobile }}px;
+                      text-align: {{ _block.product_title_align_mobile }};
+                    }
+
+                    .product-item-small#block-{{ block.id }} p {
+                      color: {{ _block.product_subtitle_color_mobile }};
+                      font-size: {{ _block.product_subtitle_size_mobile }}px;
+                      text-align: {{ _block.product_subtitle_align_mobile }};
+                    }
+
+                    .product-item-small#block-{{ block.id }} button {
+                      color: {{ _block.product_btn_color_mobile }};
+                      background-color: {{ _block.product_bg_btn_color_mobile }};
+                    }
+                  }
+                </style>
+              {%- endcapture -%}
+            {%- endfor -%}
+          </div><!-- /.product-items -->
+        </div><!-- /.section__content -->
+      </div><!-- /.section__inner -->
+    </div><!-- /.shell -->
+  </section><!-- /.section-featured-products -->
+{%- endif -%}
+
+<style type="text/css" media="screen">
+  .section-featured-products#section-featured-products-{{ section.id }} .section__image:after {
+    background-color: {{ _section.image_overlay_color_desktop }};
+    opacity: {{ _section.image_overlay_opacity_desktop | times: 0.01  }};
+  }
+
+  @media (max-width: 767px) {
+    .section-featured-products#section-featured-products-{{ section.id }} .section__image:after {
+      background-color: {{ _section.image_overlay_color_mobile }};
+      opacity: {{ _section.image_overlay_opacity_mobile | times: 0.01  }};
+    }
+  }
+</style>
+
+{{- blocks_styles -}}
+
+{% schema %}
+{
+  "name": "Featured products",
+  "class": "fade-in js-fade-in",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse Image/Products order",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_url",
+      "label": "Image URL"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Image",
+      "info": "Recommended image size: 600x1446 px"
+    },
+    {
+      "type": "color",
+      "id": "image_overlay_color_desktop",
+      "label": "Overlay color",
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 25
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image",
+      "info": "Recommended image size: 600x798 px"
+    },
+    {
+      "type": "color",
+      "id": "image_overlay_color_mobile",
+      "label": "Overlay color",
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 25
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_item",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Desktop"
+        },
+        {
+          "type": "paragraph",
+          "content": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "product_title",
+          "label": "Product title",
+          "info": "Overwrites product title"
+        },
+        {
+          "type": "range",
+          "id": "product_title_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Product title size",
+          "default": 18
+        },
+        {
+          "type": "color",
+          "id": "product_title_color",
+          "label": "Product title color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "product_title_align",
+          "label": "Product title align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "paragraph",
+          "content": "Subtitle"
+        },
+        {
+          "type": "textarea",
+          "id": "product_subtitle",
+          "label": "Product subtitle",
+          "info": "Overwrites product subtitle"
+        },
+        {
+          "type": "range",
+          "id": "product_subtitle_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Product subtitle size",
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "product_subtitle_color",
+          "label": "Product subtitle color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "product_subtitle_align",
+          "label": "Product subtitle align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "paragraph",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "product_btn_text",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "product_btn_color",
+          "label": "Color",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "product_bg_btn_color",
+          "label": "Background color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Mobile"
+        },
+        {
+          "type": "paragraph",
+          "content": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "product_title_mobile",
+          "label": "Product title",
+          "info": "Overwrites product title"
+        },
+        {
+          "type": "range",
+          "id": "product_title_size_mobile",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Product title size",
+          "default": 18
+        },
+        {
+          "type": "color",
+          "id": "product_title_color_mobile",
+          "label": "Product title color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "product_title_align_mobile",
+          "label": "Product title align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "paragraph",
+          "content": "Subtitle"
+        },
+        {
+          "type": "textarea",
+          "id": "product_subtitle_mobile",
+          "label": "Product subtitle",
+          "info": "Overwrites product subtitle"
+        },
+        {
+          "type": "range",
+          "id": "product_subtitle_size_mobile",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Product subtitle size",
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "product_subtitle_color_mobile",
+          "label": "Product subtitle color",
+          "default": "#000"
+        },
+        {
+          "type": "select",
+          "id": "product_subtitle_align_mobile",
+          "label": "Product subtitle align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "paragraph",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "product_btn_text_mobile",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "product_btn_color_mobile",
+          "label": "Color",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "product_bg_btn_color_mobile",
+          "label": "Background color",
+          "default": "#000"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
